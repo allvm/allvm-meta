@@ -3,17 +3,12 @@
 cpu		HAMMER
 ident		ALLVM
 
-makeoptions CC=/usr/local/bin/clang
-makeoptions CXX=/usr/local/bin/clang++
-makeoptions CPP=/usr/local/bin/clang-cpp
-makeoptions NM=/usr/local/bin/nm
-makeoptions AR=/usr/local/bin/ar
-makeoptions COPTFLAGS="-O2 -pipe -no-integrated-as"
-
-# This doesn't seem to work??
-# makeoptions CFLAGS=-no-integrated-as
-# Don't try LTO until we get a working clang kernel first
-# makeoptions CFLAGS="-flto -Wl,-plugin,/usr/local/lib/LLVMgold.so"
+# makeoptions CC=/usr/local/bin/clang
+# makeoptions CXX=/usr/local/bin/clang++
+# makeoptions CPP=/usr/local/bin/clang-cpp
+# makeoptions NM=/usr/local/bin/nm
+# makeoptions AR=/usr/local/bin/ar
+# makeoptions COPTFLAGS="-O2 -pipe -no-integrated-as"
 
 options 	SCHED_ULE		# ULE scheduler
 options 	PREEMPTION		# Enable kernel thread preemption
