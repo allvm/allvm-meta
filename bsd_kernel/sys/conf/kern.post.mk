@@ -136,8 +136,6 @@ ${FULLKERNEL}.bc: ${SYSTEM_DEP} vers.o
 	@echo "***// bitcode kernel built: ${.TARGET}"
 
 # Codegen into .o (later, we'd like to do this dynamically)
-# TODO: Move this to /etc/make.conf or so
-LLC := /usr/local/bin/llc
 ${FULLKERNEL}.bc.o: ${FULLKERNEL}.bc
 	@rm -f ${.TARGET}
 	@echo "***\\\\ codegen'ing IR into ${.TARGET}"
@@ -208,7 +206,7 @@ assym.s: $S/kern/genassym.sh genassym.o
 	NM='${NM}' sh $S/kern/genassym.sh genassym.o > ${.TARGET}
 
 genassym.o: $S/$M/$M/genassym.c
-	${CC} -c ${CFLAGS:N-fno-common} $S/$M/$M/genassym.c
+	${CC} -c ${CFLAGS:N-fno-common:N-flto} $S/$M/$M/genassym.c
 
 ${SYSTEM_OBJS} genassym.o vers.o: opt_global.h
 

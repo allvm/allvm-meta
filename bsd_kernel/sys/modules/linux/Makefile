@@ -53,7 +53,7 @@ linux${SFX}_support.o: linux${SFX}_support.s assym.s linux${SFX}_assym.h
 	    ${.IMPSRC} -o ${.TARGET}
 
 linux${SFX}_genassym.o: linux${SFX}_genassym.c linux.h @ machine
-	${CC} -c ${CFLAGS:N-fno-common} ${.IMPSRC}
+	${CC} -c ${CFLAGS:N-fno-common:N-flto} ${.IMPSRC}
 
 .if !defined(KERNBUILDDIR)
 opt_inet6.h:
