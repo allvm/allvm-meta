@@ -456,7 +456,7 @@ assym.s: @/kern/genassym.sh
 genassym.o: @/${MACHINE_CPUARCH}/${MACHINE_CPUARCH}/genassym.c
 .endif
 genassym.o: @ machine ${SRCS:Mopt_*.h}
-	${CC} -c ${CFLAGS:N-fno-common} \
+	${CC} -c ${CFLAGS:N-fno-common:N-flto} \
 	    @/${MACHINE_CPUARCH}/${MACHINE_CPUARCH}/genassym.c
 .endif
 
