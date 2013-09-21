@@ -15,8 +15,6 @@ makeoptions COPTFLAGS="-O2 -pipe -no-integrated-as"
 # Don't try LTO until we get a working clang kernel first
 # makeoptions CFLAGS="-flto -Wl,-plugin,/usr/local/lib/LLVMgold.so"
 
-options 	INCLUDE_CONFIG_FILE     # Include this file in kernel
-
 options 	SCHED_ULE		# ULE scheduler
 options 	PREEMPTION		# Enable kernel thread preemption
 options 	INET			# InterNETworking
