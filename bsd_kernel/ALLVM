@@ -3,13 +3,6 @@
 cpu		HAMMER
 ident		ALLVM
 
-# makeoptions CC=/usr/local/bin/clang
-# makeoptions CXX=/usr/local/bin/clang++
-# makeoptions CPP=/usr/local/bin/clang-cpp
-# makeoptions NM=/usr/local/bin/nm
-# makeoptions AR=/usr/local/bin/ar
-# makeoptions COPTFLAGS="-O2 -pipe -no-integrated-as"
-
 options 	SCHED_ULE		# ULE scheduler
 options 	PREEMPTION		# Enable kernel thread preemption
 options 	INET			# InterNETworking
