@@ -10,7 +10,7 @@
 #include <sys/param.h>  /* defines used in kernel.h */
 #include <sys/kernel.h> /* types used in module initialization */
 
-extern int foo(int, int, int);
+extern int testJIT();
 
 /*
  * Load handler that deals with the loading and unloading of a KLD.
@@ -29,8 +29,8 @@ static int jit_loader(struct module *m, int what, void *arg) {
     break;
   }
 
-  uprintf("Foo returned: %d\n",
-          foo((int)(intptr_t)m, (int)(intptr_t)what, (int)(intptr_t)arg));
+  uprintf("Testing JIT...\n");
+  uprintf("testJIT() returned: %d\n", testJIT());
 
   return (err);
 }

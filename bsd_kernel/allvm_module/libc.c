@@ -35,5 +35,3 @@ UNSUPPORTED(pthread_mutex_lock);
 UNSUPPORTED(pthread_mutex_unlock);
 UNSUPPORTED(pthread_once);
 UNSUPPORTED(realloc);
-
-void *__stderrp = 0;
