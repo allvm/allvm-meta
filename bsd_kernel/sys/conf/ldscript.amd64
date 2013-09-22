@@ -180,6 +180,13 @@ SECTIONS
   . = ALIGN(64 / 8);
   _end = .; PROVIDE (end = .);
   . = DATA_SEGMENT_END (.);
+  .bytecode : {
+    bckernel_len = .;
+    LONG( bckernel_end - bckernel_begin )
+    bckernel_begin = .;
+    *(.bckernel)
+    bckernel_end = .;
+  }
   /* Stabs debugging sections.  */
   .stab          0 : { *(.stab) }
   .stabstr       0 : { *(.stabstr) }

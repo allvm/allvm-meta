@@ -136,14 +136,22 @@ ${FULLKERNEL}.bc: ${SYSTEM_DEP} vers.o
 	@echo "***// bitcode kernel built: ${.TARGET}"
 
 # Codegen into .o (later, we'd like to do this dynamically)
-${FULLKERNEL}.bc.o: ${FULLKERNEL}.bc
+${FULLKERNEL}.o: ${FULLKERNEL}.bc
 	@rm -f ${.TARGET}
 	@echo "***\\\\ codegen'ing IR into ${.TARGET}"
 	${CC} ${CFLAGS} ${FULLKERNEL}.bc -o ${.TARGET} -c -fno-lto
 	@echo "***// kernel codegen'd!"
 
+# Inject kernel.bc into an object file for linking into kernel
+${FULLKERNEL}.bc.o: ${FULLKERNEL}.bc
+	@rm -f ${.TARGET} ${.TARGET}.lnk
+	@echo "***\\\\ Injecting ${FULLKERNEL}.bc into ${.TARGET}"
+	@echo "SECTIONS { .bckernel : { *(.data) }}" > ${.TARGET}.lnk
+	ld -r -o ${.TARGET} -b binary ${FULLKERNEL}.bc -b elf64-x86-64 -T ${.TARGET}.lnk
+	@echo "***// Created ${.TARGET} with kernel bitcode"
+
 # Link all native code together as we normally would:
-${FULLKERNEL}: ${FULLKERNEL}.bc.o ${SYSTEM_DEPS}
+${FULLKERNEL}: ${FULLKERNEL}.o ${FULLKERNEL}.bc.o ${SYSTEM_DEPS}
 	@rm -f ${.TARGET}
 	@echo linking ${.TARGET}
 	file ${SYSTEM_OBJS} vers.o|grep -v LLVM|sed 's/:.*$$//g'| \
@@ -151,7 +159,7 @@ ${FULLKERNEL}: ${FULLKERNEL}.bc.o ${SYSTEM_DEPS}
 		--no-warn-mismatch --warn-common \
 		-export-dynamic -dynamic-linker /red/herring \
 		-X -o ${.TARGET} \
-		${FULLKERNEL}.bc.o
+		${FULLKERNEL}.o ${FULLKERNEL}.bc.o
 .if ${MK_CTF} != "no"
 	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${SYSTEM_OBJS} vers.o
 .endif
