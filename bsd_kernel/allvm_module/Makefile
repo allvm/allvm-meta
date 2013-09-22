@@ -5,7 +5,7 @@ LLVM_COMPONENTS := nativecodegen jit
 LLVM_CONFIG=/usr/local/bin/llvm-config
 
 CXX := /usr/local/bin/clang++
-CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions -fno-builtin
+CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
 
 LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
 LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS}
