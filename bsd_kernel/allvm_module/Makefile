@@ -28,4 +28,19 @@ KMOD := allvm-jit
 
 .include <bsd.kmod.mk>
 
+kern.syms: /boot/kernel/kernel
+	@nm --defined-only -f posix ${.ALLSRC} | awk '{print $$1}' > ${.TARGET}
 
+kmod.undef.syms: ${FULLPROG}
+	@nm -u -f posix ${.ALLSRC} | awk '{print $$1}' > ${.TARGET}
+
+missing.syms: kern.syms kmod.undef.syms
+	@grep -Fxvf kern.syms kmod.undef.syms > ${.TARGET}
+
+symcheck: missing.syms
+	@echo "Checking for undefined symbols not provided by kernel..."
+	@test ! -s ${.ALLSRC} || (cat ${.ALLSRC} && exit 1)
+	@echo "Check passed (none found)!"
+
+# Refuse to try loading kernel if we still have undef symbols..
+load: symcheck
