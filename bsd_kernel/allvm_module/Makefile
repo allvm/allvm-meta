@@ -4,7 +4,6 @@
 LLVM_COMPONENTS := nativecodegen jit
 LLVM_CONFIG=/usr/local/bin/llvm-config
 
-CXX := /usr/local/bin/clang++
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
 CXXFLAGS += -Ihorizon-baremetal
 
