@@ -31,7 +31,7 @@
 #include <fstream>
 
 extern "C" {
-#include <libudis86/udis86.h>
+#include <udis86.h>
 }
 
 using namespace llvm;

@@ -1,11 +1,12 @@
 
-.PATH: /usr/src/sys/libkern
+.PATH: /usr/src/sys/libkern horizon-baremetal
 
 LLVM_COMPONENTS := nativecodegen jit
-LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
+LLVM_CONFIG=/usr/local/bin/llvm-config
 
 CXX := /usr/local/bin/clang++
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
+CXXFLAGS += -Ihorizon-baremetal
 
 LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
 LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS}
@@ -28,6 +29,10 @@ KMOD := allvm-jit
 
 .include <bsd.kmod.mk>
 
+#############################
+# Exported symbol checking
+#############################
+
 kern.syms: /boot/kernel/kernel
 	@nm --defined-only -f posix ${.ALLSRC} | awk '{print $$1}' > ${.TARGET}
 
@@ -44,3 +49,15 @@ symcheck: missing.syms
 
 # Refuse to try loading kernel if we still have undef symbols..
 load: symcheck
+
+#############################
+# insn-swap building
+#############################
+
+INSN_LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS} all
+INSN_LDFLAGS := ${INSN_LLVM_LDFLAGS} -ludis86 -ltinfo
+
+insn-swap: insn-swap.cc
+	${CXX} -I/usr/local/include ${.ALLSRC} ${LLVM_CXXFLAGS} ${INSN_LDFLAGS} -o ${.TARGET}
+
+CLEANFILES += insn-swap
