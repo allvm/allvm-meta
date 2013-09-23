@@ -53,8 +53,8 @@ load: symcheck
 # insn-swap building
 #############################
 
-INSN_LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS} all
-INSN_LDFLAGS := ${INSN_LLVM_LDFLAGS} -ludis86 -ltinfo
+INSN_LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS} core
+INSN_LDFLAGS := ${INSN_LLVM_LDFLAGS} -ludis86
 
 insn-swap: insn-swap.cc
 	${CXX} -I/usr/local/include ${.ALLSRC} ${LLVM_CXXFLAGS} ${INSN_LDFLAGS} -o ${.TARGET}
