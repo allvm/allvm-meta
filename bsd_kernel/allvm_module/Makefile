@@ -5,6 +5,7 @@ LLVM_COMPONENTS := nativecodegen jit
 LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
 
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
+CXXFLAGS += -fno-strict-aliasing -D__NO_TLS -DKLD_MODULE -fno-common  -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -mno-aes -mno-avx -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -msoft-float  -fno-asynchronous-unwind-tables -ffreestanding
 CXXFLAGS += -Ihorizon-baremetal
 
 LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
