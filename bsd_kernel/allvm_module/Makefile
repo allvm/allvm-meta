@@ -46,8 +46,21 @@ symcheck: missing.syms
 	@test ! -s ${.ALLSRC} || (cat ${.ALLSRC} && exit 1)
 	@echo "Check passed (none found)!"
 
+###################################
+# Unsupported relocation checking
+####################################
+
+# Snippet taken from https://lists.cam.ac.uk/pipermail/cl-mirage/2012-July/msg00126.html
+unsupported_relocs: ${FULLPROG}
+	@readelf -r ${.ALLSRC} | grep -E "(PLT32|GOTPCREL)" > ${.TARGET}
+
+reloccheck: unsupported_relocs
+	@echo "Checking for unsupported relocation types..."
+	@test ! -s ${.ALLSRC} || (cat ${.ALLSRC} && exit 1)
+	@echo "Check passed (none found)!"
+
 # Refuse to try loading kernel if we still have undef symbols..
-load: symcheck
+load: symcheck reloccheck
 
 #############################
 # insn-swap building
