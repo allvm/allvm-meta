@@ -53,7 +53,7 @@ symcheck: missing.syms
 
 # Snippet taken from https://lists.cam.ac.uk/pipermail/cl-mirage/2012-July/msg00126.html
 unsupported_relocs: ${FULLPROG}
-	@readelf -r ${.ALLSRC} | grep -E "(PLT32|GOTPCREL)" > ${.TARGET}
+	@-objdump -r ${.ALLSRC} | grep -E "(PLT32|GOTPCREL|R_X86_64_32)" > ${.TARGET}
 
 reloccheck: unsupported_relocs
 	@echo "Checking for unsupported relocation types..."
