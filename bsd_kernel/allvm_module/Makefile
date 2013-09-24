@@ -15,11 +15,9 @@ LINK_TAIL := -static ${LLVM_LDFLAGS} -lstdc++ -lm
 
 SRCS := main.c jit.cpp
 
-SRCS += unwind.c
 SRCS += icxxabi.cpp
-
-# SRCS += libc.c
-# LIBKERN_SRC := memchr.c
+SRCS += dl.c libc.c pthread.c tinfo.c unwind.c
+LIBKERN_SRC := memchr.c
 
 SRCS += ${LIBKERN_SRC}
 

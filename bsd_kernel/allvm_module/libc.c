@@ -11,27 +11,89 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <sys/types.h>
-#include <sys/module.h>
-#include <sys/systm.h> /* uprintf */
+#include "stubs.h"
 
-#define WARN() uprintf("Unsupported call to '%s'!\n", __FUNCTION__)
-
-#define UNSUPPORTED(name) \
-  void name(void); \
-  void name() { WARN(); }
-
-UNSUPPORTED(open);
-UNSUPPORTED(close);
-
-// TODO: Partially support these!
 UNSUPPORTED(abort);
+UNSUPPORTED(access);
+UNSUPPORTED(alarm);
+UNSUPPORTED(atoi);
+UNSUPPORTED(calloc);
+UNSUPPORTED(clock_gettime);
+UNSUPPORTED(close);
+UNSUPPORTED(closedir);
+UNSUPPORTED(dup2);
+UNSUPPORTED(environ);
+UNSUPPORTED(execv);
+UNSUPPORTED(execve);
+UNSUPPORTED(exit);
+UNSUPPORTED(fabs);
+UNSUPPORTED(fclose);
+UNSUPPORTED(feof);
+UNSUPPORTED(ferror);
+UNSUPPORTED(fopen);
+UNSUPPORTED(fork);
 UNSUPPORTED(fputc);
 UNSUPPORTED(fputs);
+UNSUPPORTED(fread);
 UNSUPPORTED(free);
+UNSUPPORTED(fstat);
+UNSUPPORTED(ftruncate);
+UNSUPPORTED(futimes);
 UNSUPPORTED(fwrite);
+UNSUPPORTED(getcwd);
+UNSUPPORTED(getpagesize);
+UNSUPPORTED(getpid);
+UNSUPPORTED(getrlimit);
+UNSUPPORTED(getrusage);
+UNSUPPORTED(gettimeofday);
+UNSUPPORTED(ioctl);
+UNSUPPORTED(isalnum);
+UNSUPPORTED(isalpha);
+UNSUPPORTED(isatty);
+UNSUPPORTED(isprint);
+UNSUPPORTED(isspace);
+UNSUPPORTED(kill);
+UNSUPPORTED(link);
+UNSUPPORTED(localtime_r);
+UNSUPPORTED(lseek);
 UNSUPPORTED(malloc);
-UNSUPPORTED(pthread_mutex_lock);
-UNSUPPORTED(pthread_mutex_unlock);
-UNSUPPORTED(pthread_once);
+UNSUPPORTED(mkdir);
+UNSUPPORTED(mmap);
+UNSUPPORTED(mprotect);
+UNSUPPORTED(munmap);
+UNSUPPORTED(open);
+UNSUPPORTED(opendir);
+UNSUPPORTED(posix_spawn);
+UNSUPPORTED(posix_spawn_file_actions_adddup2);
+UNSUPPORTED(posix_spawn_file_actions_addopen);
+UNSUPPORTED(posix_spawn_file_actions_destroy);
+UNSUPPORTED(posix_spawn_file_actions_init);
+UNSUPPORTED(pread);
+UNSUPPORTED(raise);
+UNSUPPORTED(read);
+UNSUPPORTED(readdir);
 UNSUPPORTED(realloc);
+UNSUPPORTED(realpath);
+UNSUPPORTED(remove);
+UNSUPPORTED(rename);
+UNSUPPORTED(sbrk);
+UNSUPPORTED(setrlimit);
+UNSUPPORTED(sigaction);
+UNSUPPORTED(sigemptyset);
+UNSUPPORTED(sigfillset);
+UNSUPPORTED(sigprocmask);
+UNSUPPORTED(stat);
+UNSUPPORTED(strerror_r);
+UNSUPPORTED(strftime);
+UNSUPPORTED(strsignal);
+UNSUPPORTED(strtod);
+UNSUPPORTED(symlink);
+UNSUPPORTED(sysconf);
+UNSUPPORTED(tolower);
+UNSUPPORTED(toupper);
+UNSUPPORTED(truncate);
+UNSUPPORTED(unlink);
+UNSUPPORTED(wait);
+UNSUPPORTED(waitpid);
+UNSUPPORTED(write);
+UNSUPPORTED(writev);
