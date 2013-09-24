@@ -90,19 +90,15 @@ void populateTestModule(Module *M, LLVMContext &C) {
 }
 
 int testJIT(char go) {
-  std::vector<int> ints;
-  ints.push_back(go);
-  if (go) {
-    InitializeNativeTarget();
+  InitializeNativeTarget();
 
-    LLVMContext Context;
+  LLVMContext Context;
 
-    Module *M = new Module("test", Context);
+  Module *M = new Module("test", Context);
 
-    populateTestModule(M, Context);
+  populateTestModule(M, Context);
 
-    // TODO: Run the JIT!
-  }
+  // TODO: Run the JIT!
 
-  return ints.back();
+  return 0;
 }

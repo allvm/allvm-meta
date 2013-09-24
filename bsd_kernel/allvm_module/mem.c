@@ -1,4 +1,4 @@
-//===-- cxx_mem.c ---------------------------------------------------------===//
+//===-- mem.c -------------------------------------------------------------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// Support for c++ memory allocation in kernel
+// Support for C/C++ memory allocation in kernel
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,8 +18,8 @@
 
 //===-- Primary Allocation ------------------------------------------------===//
 
-MALLOC_DECLARE(allvm_cpp_mem);
-MALLOC_DEFINE(allvm_cpp_mem,"allvm_cpp","Memory for ALLVM C++ kernel objects");
+MALLOC_DECLARE(allvm_mem);
+MALLOC_DEFINE(allvm_mem,"allvm-mem","Memory for ALLVM C/C++ kernel objects");
 
 static inline void* alloc(unsigned long sz) {
   printf("[ALLVM] alloc(%lu)\n", sz);
@@ -31,7 +31,22 @@ static inline void dealloc(void *p) {
   return free(p, allvm_cpp_mem);
 }
 
-//===-- Define C++ operations in terms of alloc/dealloc--------------------===//
+//===-- Define C operations in terms of alloc/dealloc ---------------------===//
+
+// TODO: Force LLVM/etc to use *our* malloc, not that provided by kernel!
+
+
+void *calloc(size_t nmemb, size_t size) {
+  return alloc(nmemb * size);
+}
+
+void *realloc(void *ptr, size_t size) {
+  // Deal with it :).
+  return NULL;
+}
+
+
+//===-- Define C++ operations in terms of alloc/dealloc -------------------===//
 
 // operator new[](unsigned long)
 void* _Znam(unsigned long sz);
