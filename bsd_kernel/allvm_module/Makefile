@@ -16,7 +16,7 @@ LINK_TAIL := -static ${LLVM_LDFLAGS} -lstdc++ -lm
 SRCS := main.c jit.cpp
 
 SRCS += icxxabi.cpp
-SRCS += dl.c libc.c pthread.c tinfo.c unwind.c
+SRCS += dl.c libc.c gcc.c pthread.c strchr.c tinfo.c unwind.c
 LIBKERN_SRC := memchr.c
 
 SRCS += ${LIBKERN_SRC}
@@ -39,7 +39,7 @@ kmod.undef.syms: ${FULLPROG}
 	@nm -u -f posix ${.ALLSRC} | awk '{print $$1}' > ${.TARGET}
 
 missing.syms: kern.syms kmod.undef.syms
-	@grep -Fxvf kern.syms kmod.undef.syms > ${.TARGET}
+	@-grep -Fxvf kern.syms kmod.undef.syms > ${.TARGET}
 
 symcheck: missing.syms
 	@echo "Checking for undefined symbols not provided by kernel..."

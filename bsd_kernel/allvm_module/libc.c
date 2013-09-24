@@ -13,6 +13,11 @@
 
 #include "stubs.h"
 
+void *__error = 0;
+
+// TODO: Almost certainly terrible
+void *__stderrp = 0;
+
 UNSUPPORTED(abort);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
@@ -97,3 +102,6 @@ UNSUPPORTED(wait);
 UNSUPPORTED(waitpid);
 UNSUPPORTED(write);
 UNSUPPORTED(writev);
+
+UNSUPPORTED(__xuname);
+UNSUPPORTED(_exit);
