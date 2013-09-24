@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-typedef unsigned uarch_t;
+typedef signed uarch_t;
 
 struct atexit_func_entry_t {
   /*

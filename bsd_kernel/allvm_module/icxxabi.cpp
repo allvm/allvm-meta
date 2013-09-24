@@ -36,7 +36,7 @@ void __cxa_finalize(void *f) {
     * runtime in a particular application. This can be used to tell when a
     * shared object is no longer in use. It is one of many methods, however.
     **/
-    // You may insert a prinf() here to tell you whether or not the function
+    // You may insert a printf() here to tell you whether or not the function
     // gets called.
     // Testing is CRITICAL!
     while (i--) {
