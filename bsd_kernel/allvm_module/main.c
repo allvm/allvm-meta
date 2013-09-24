@@ -1,7 +1,15 @@
-/*
- * KLD Skeleton
- * Inspired by Andrew Reiter's Daemonnews article
- */
+//===-- main.c ------------------------------------------------------------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// ALLVM-JIT primary kernel module interface
+//
+//===----------------------------------------------------------------------===//
 
 #include <sys/types.h>
 #include <sys/module.h>
