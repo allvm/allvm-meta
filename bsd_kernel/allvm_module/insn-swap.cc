@@ -36,14 +36,15 @@ extern "C" {
 
 using namespace llvm;
 
-static cl::opt<std::string>
-InputFilename(cl::Positional, cl::desc("<input ELF file>"), cl::init("-"));
+static cl::opt<std::string> InputFilename(cl::Positional,
+                                          cl::desc("<input ELF file>"),
+                                          cl::init("-"), cl::Required);
 
-static cl::opt<std::string>
-SearchSeq("s", cl::desc("Search sequence in hex"), cl::value_desc("search"));
+static cl::opt<std::string> SearchSeq("s", cl::desc("Search sequence in hex"),
+                                      cl::value_desc("search"), cl::Required);
 
-static cl::opt<std::string>
-ReplaceSeq("r", cl::desc("Replace sequence in hex"), cl::value_desc("replace"));
+static cl::opt<std::string> ReplaceSeq("r", cl::desc("Replace sequence in hex"),
+                                       cl::value_desc("replace"), cl::Required);
 
 #define PACKED __attribute__((packed))
 
