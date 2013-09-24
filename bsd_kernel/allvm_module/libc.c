@@ -27,7 +27,6 @@ UNSUPPORTED(abort);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
 UNSUPPORTED(atoi);
-UNSUPPORTED(calloc);
 UNSUPPORTED(clock_gettime);
 UNSUPPORTED(close);
 UNSUPPORTED(closedir);

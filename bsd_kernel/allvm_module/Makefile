@@ -15,7 +15,7 @@ LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
 LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS}
 
 CXXFLAGS += ${LLVM_CXXFLAGS}
-LINK_TAIL := -static ${LLVM_LDFLAGS} -lm
+LINK_TAIL := -static ${LLVM_LDFLAGS} -lm -wrap malloc -wrap realloc -wrap free
 
 SRCS := main.c jit.cpp
 

@@ -21,28 +21,44 @@
 MALLOC_DECLARE(allvm_mem);
 MALLOC_DEFINE(allvm_mem,"allvm-mem","Memory for ALLVM C/C++ kernel objects");
 
+void *__real_malloc(unsigned long size, struct malloc_type *type, int flags) __malloc_like;
+void *__real_realloc(void *addr, unsigned long size, struct malloc_type *type, int flags);
+void __real_free(void *addr, struct malloc_type *type);
+
 static inline void* alloc(unsigned long sz) {
   printf("[ALLVM] alloc(%lu)\n", sz);
-  return malloc(sz, allvm_cpp_mem, M_ZERO|M_NOWAIT);
+  return __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
 }
 
 static inline void dealloc(void *p) {
   printf("[ALLVM] dealloc(%p)\n", p);
-  return free(p, allvm_cpp_mem);
+  return __real_free(p, allvm_mem);
 }
 
 //===-- Define C operations in terms of alloc/dealloc ---------------------===//
 
 // TODO: Force LLVM/etc to use *our* malloc, not that provided by kernel!
 
+void *__wrap_malloc(size_t sz);
+void *__wrap_malloc(size_t sz) {
+  return alloc(sz);
+}
 
+
+void *calloc(size_t nmemb, size_t size);
 void *calloc(size_t nmemb, size_t size) {
   return alloc(nmemb * size);
 }
 
-void *realloc(void *ptr, size_t size) {
+void *__wrap_realloc(void *ptr, size_t size);
+void *__wrap_realloc(void *ptr, size_t size) {
   // Deal with it :).
   return NULL;
+}
+
+void __wrap_free(void *ptr);
+void __wrap_free(void *ptr) {
+  dealloc(ptr);
 }
 
 
