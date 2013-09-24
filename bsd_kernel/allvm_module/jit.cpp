@@ -100,5 +100,7 @@ int testJIT(char go) {
 
   // TODO: Run the JIT!
 
+  // XXX: Eventually be good about calling llvm_shutdown() ?
+
   return 0;
 }
