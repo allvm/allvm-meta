@@ -18,6 +18,11 @@ void *__error = 0;
 // TODO: Almost certainly terrible
 void *__stderrp = 0;
 
+void __assert(const char *, const char *, int, const char *);
+void __assert(const char * function, const char * file, int line, const char *expression) {
+  panic("Assertion failure in %s at %s:%d: \"%s\"\n", function, file, line, expression);
+}
+
 UNSUPPORTED(abort);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
