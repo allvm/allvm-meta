@@ -23,6 +23,29 @@ void __assert(const char * function, const char * file, int line, const char *ex
   panic("Assertion failure in %s at %s:%d: \"%s\"\n", function, file, line, expression);
 }
 
+int isalpha(int c);
+int isalpha(int c) {
+  return ('a' <= c && c <= 'z') ||
+         ('A' <= c && c <= 'Z');
+}
+
+int isdigit(int c);
+int isdigit(int c) {
+  return '0' <= c && c <= '9';
+}
+
+int isalnum(int c);
+int isalnum(int c) {
+  return isalpha(c) || isdigit(c);
+}
+
+int isspace(int c);
+int isspace(int c) {
+  return c == ' '  || c == '\f' ||
+         c == '\n' || c == '\r' ||
+         c == '\t' || c == '\v';
+}
+
 UNSUPPORTED(abort);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
@@ -55,11 +78,8 @@ UNSUPPORTED(getrlimit);
 UNSUPPORTED(getrusage);
 UNSUPPORTED(gettimeofday);
 UNSUPPORTED(ioctl);
-UNSUPPORTED(isalnum);
-UNSUPPORTED(isalpha);
 UNSUPPORTED(isatty);
 UNSUPPORTED(isprint);
-UNSUPPORTED(isspace);
 UNSUPPORTED(kill);
 UNSUPPORTED(link);
 UNSUPPORTED(localtime_r);
