@@ -21,7 +21,7 @@
 // CXX support
 #include "icxxabi.h"
 
-extern int testJIT();
+extern int testJIT(char go);
 
 /*
  * Load handler that deals with the loading and unloading of a KLD.
@@ -31,6 +31,10 @@ static int jit_loader(struct module *m, int what, void *arg) {
   switch (what) {
   case MOD_LOAD: /* kldload */
     uprintf("ALLVM-JIT KLD loaded.\n");
+
+    uprintf("Testing JIT...\n");
+    uprintf("testJIT() returned: %d\n", testJIT(false));
+
     break;
   case MOD_UNLOAD:
     uprintf("ALLVM-JIT unloaded.\n");
@@ -39,9 +43,6 @@ static int jit_loader(struct module *m, int what, void *arg) {
     err = EOPNOTSUPP;
     break;
   }
-
-  uprintf("Testing JIT...\n");
-  uprintf("testJIT() returned: %d\n", testJIT());
 
   return (err);
 }

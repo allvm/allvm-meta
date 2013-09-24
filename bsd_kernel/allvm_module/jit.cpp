@@ -25,7 +25,7 @@
 using namespace llvm;
 
 // Used in main.c
-extern "C" int testJIT(void);
+extern "C" int testJIT(char go);
 
 
 // Test code taken from "HowToUseJIT.cpp" example in LLVM tree
@@ -87,17 +87,20 @@ void populateTestModule(Module *M, LLVMContext &C) {
 
 }
 
-int testJIT() {
+int testJIT(char go) {
+  if (go) {
+    InitializeNativeTarget();
 
-  InitializeNativeTarget();
+    LLVMContext Context;
 
-  LLVMContext Context;
+    Module *M = new Module("test", Context);
 
-  Module *M = new Module("test", Context);
+    populateTestModule(M, Context);
 
-  populateTestModule(M, Context);
+    // TODO: Run the JIT!
 
-  // TODO: Run the JIT!
+  }
+
 
   return 0;
 }
