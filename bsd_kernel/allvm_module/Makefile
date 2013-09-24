@@ -2,7 +2,7 @@
 .PATH: /usr/src/sys/libkern horizon-baremetal
 
 LLVM_COMPONENTS := nativecodegen jit
-LLVM_CONFIG=/usr/local/bin/llvm-config
+LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
 
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
 CXXFLAGS += -Ihorizon-baremetal
