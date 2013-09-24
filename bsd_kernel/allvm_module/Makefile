@@ -11,11 +11,13 @@ LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
 LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS}
 
 CXXFLAGS += ${LLVM_CXXFLAGS}
-LINK_TAIL := -static ${LLVM_LDFLAGS} -lstdc++ -lm -lc
+LINK_TAIL := -static ${LLVM_LDFLAGS} -lstdc++ -lm
 
 SRCS := main.c jit.cpp
 
 SRCS += unwind.c
+SRCS += icxxabi.cpp
+
 # SRCS += libc.c
 # LIBKERN_SRC := memchr.c
 
