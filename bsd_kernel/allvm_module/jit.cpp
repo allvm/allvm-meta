@@ -22,6 +22,8 @@
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/TargetSelect.h"
 
+#include <vector>
+
 using namespace llvm;
 
 // Used in main.c
@@ -88,6 +90,8 @@ void populateTestModule(Module *M, LLVMContext &C) {
 }
 
 int testJIT(char go) {
+  std::vector<int> ints;
+  ints.push_back(go);
   if (go) {
     InitializeNativeTarget();
 
@@ -98,9 +102,7 @@ int testJIT(char go) {
     populateTestModule(M, Context);
 
     // TODO: Run the JIT!
-
   }
 
-
-  return 0;
+  return ints.back();
 }

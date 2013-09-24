@@ -30,14 +30,14 @@ static int jit_loader(struct module *m, int what, void *arg) {
   int err = 0;
   switch (what) {
   case MOD_LOAD: /* kldload */
-    uprintf("ALLVM-JIT KLD loaded.\n");
+    printf("ALLVM-JIT KLD loaded.\n");
 
-    uprintf("Testing JIT...\n");
-    uprintf("testJIT() returned: %d\n", testJIT(false));
+    printf("Testing JIT...\n");
+    printf("testJIT() returned: %d\n", testJIT(false));
 
     break;
   case MOD_UNLOAD:
-    uprintf("ALLVM-JIT unloaded.\n");
+    printf("ALLVM-JIT unloaded.\n");
     break;
   default:
     err = EOPNOTSUPP;
