@@ -163,6 +163,7 @@ elf_reloc_internal(linker_file_t lf, Elf_Addr relocbase, const void *data,
 		switch (rtype) {
 		case R_X86_64_PC32:
 		case R_X86_64_32S:
+		case R_X86_64_32:
 			addend = *(Elf32_Addr *)where;
 			break;
 		default:
@@ -206,6 +207,16 @@ elf_reloc_internal(linker_file_t lf, Elf_Addr relocbase, const void *data,
 			break;
 
 		case R_X86_64_32S:	/* S + A sign extend */
+			addr = lookup(lf, symidx, 1);
+			val32 = (Elf32_Addr)(addr + addend);
+			where32 = (Elf32_Addr *)where;
+			if (addr == 0)
+				return -1;
+			if (*where32 != val32)
+				*where32 = val32;
+			break;
+
+		case R_X86_64_32:	/* S + A zero extend */
 			addr = lookup(lf, symidx, 1);
 			val32 = (Elf32_Addr)(addr + addend);
 			where32 = (Elf32_Addr *)where;
