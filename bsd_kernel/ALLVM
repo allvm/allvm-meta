@@ -166,7 +166,7 @@ device		agp		# support several AGP chipsets
 # device		cardbus		# CardBus (32-bit) bus
 
 # Serial (COM) ports
-# device		uart		# Generic UART driver
+device		uart		# Generic UART driver
 
 # # Parallel port
 # device		ppc
