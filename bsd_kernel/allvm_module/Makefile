@@ -5,7 +5,7 @@ LLVM_COMPONENTS := nativecodegen jit
 LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
 
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
-CXXFLAGS += -fno-strict-aliasing -D__NO_TLS -DKLD_MODULE -fno-common  -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -mno-aes -mno-avx -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -msoft-float  -fno-asynchronous-unwind-tables -ffreestanding
+CXXFLAGS += -fno-strict-aliasing -D__NO_TLS -DKLD_MODULE -fno-common  -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -mcmodel=kernel -mno-red-zone -mno-mmx -msoft-float  -fno-asynchronous-unwind-tables
 CXXFLAGS += -Ihorizon-baremetal
 
 CFLAGS += -Werror
@@ -14,14 +14,17 @@ CXXFLAGS += -Werror
 LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
 LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS}
 
+CXX := /home/will/src/uclibc-install/bin/g++-uc
+LIBCXX := /home/will/src/uclibc-install/lib/libuClibc++.a
+
 CXXFLAGS += ${LLVM_CXXFLAGS}
-LINK_TAIL := -static ${LLVM_LDFLAGS} -lm -wrap malloc -wrap realloc -wrap free
+LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} -lm -wrap malloc -wrap realloc -wrap free
 
 SRCS := main.c jit.cpp
 
-SRCS += icxxabi.cpp cxx.c
+#SRCS += icxxabi.cpp cxx.c
 SRCS += mem.c
-SRCS += dl.c libc.c gcc.c pthread.c strchr.c tinfo.c unwind.c
+SRCS += abs.c dl.c libc.c gcc.c pthread.c strchr.c tinfo.c unwind.c
 LIBKERN_SRC := memchr.c
 
 SRCS += ${LIBKERN_SRC}
