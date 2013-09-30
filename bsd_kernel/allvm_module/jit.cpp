@@ -31,7 +31,7 @@ extern "C" int testJIT(char go);
 
 
 // Test code taken from "HowToUseJIT.cpp" example in LLVM tree
-void populateTestModule(Module *M, LLVMContext &C) {
+Function *populateTestModule(Module *M, LLVMContext &C) {
   // Create the add1 function entry and insert this entry into module M.  The
   // function will have a return type of "int" and take an argument of "int".
   // The '0' terminates the list of argument types.
@@ -87,6 +87,7 @@ void populateTestModule(Module *M, LLVMContext &C) {
   // Create the return instruction and add it to the basic block.
   builder.CreateRet(Add1CallRes);
 
+  return FooF;
 }
 
 int testJIT(char go) {
@@ -96,11 +97,17 @@ int testJIT(char go) {
 
   Module *M = new Module("test", Context);
 
-  populateTestModule(M, Context);
+  Function *MainF = populateTestModule(M, Context);
 
-  // TODO: Run the JIT!
+  // Now we create the JIT.
+  ExecutionEngine* EE = EngineBuilder(M).create();
+  std::vector<GenericValue> noargs;
+  GenericValue gv = EE->runFunction(MainF, noargs);
+
+  EE->freeMachineCodeForFunction(MainF);
+  delete EE;
 
   // XXX: Eventually be good about calling llvm_shutdown() ?
 
-  return 0;
+  return gv.IntVal.getZExtValue();
 }
