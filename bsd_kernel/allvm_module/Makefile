@@ -22,7 +22,7 @@ LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} -lm -wrap malloc -wrap realloc -w
 
 SRCS := main.c jit.cpp
 
-#SRCS += icxxabi.cpp cxx.c
+SRCS += icxxabi.cpp
 SRCS += mem.c
 SRCS += abs.c dl.c libc.c gcc.c pthread.c strchr.c tinfo.c unwind.c
 LIBKERN_SRC := memchr.c
