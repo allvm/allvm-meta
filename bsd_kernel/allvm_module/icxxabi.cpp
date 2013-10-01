@@ -1,5 +1,7 @@
 #include "./icxxabi.h"
 
+#include "common.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,6 +13,7 @@ uarch_t __atexit_func_count = 0;
 void *__dso_handle = 0;
 
 int __cxa_atexit(void (*f)(void *), void *objptr, void *dso) {
+  TRACE();
   if (__atexit_func_count >= ATEXIT_MAX_FUNCS) {
     return -1;
   }
@@ -22,6 +25,7 @@ int __cxa_atexit(void (*f)(void *), void *objptr, void *dso) {
 }
 
 void __cxa_finalize(void *f) {
+  TRACE();
   uarch_t i = __atexit_func_count;
   if (!f) {
     /*
