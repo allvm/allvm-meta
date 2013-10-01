@@ -54,6 +54,12 @@ char *__wrap_getenv(const char* key) {
   return 0;
 }
 
+int gettimeofday(void *tp, void *tzp);
+int gettimeofday(void *tp, void *tzp) {
+  printf("gettimeofday() called\n");
+  return -1;
+}
+
 UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
 UNSUPPORTED(abort);
@@ -91,7 +97,6 @@ UNSUPPORTED(getcwd);
 UNSUPPORTED(getpid);
 UNSUPPORTED(getrlimit);
 UNSUPPORTED(getrusage);
-UNSUPPORTED(gettimeofday);
 UNSUPPORTED(ioctl);
 UNSUPPORTED(isatty);
 UNSUPPORTED(isprint);
