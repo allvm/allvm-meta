@@ -21,14 +21,14 @@ LIBCXX := /home/will/src/uclibc-install/lib/libuClibc++.a
 CXXFLAGS += ${LLVM_CXXFLAGS}
 LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} /usr/lib/libm.a
 LINK_TAIL += -wrap malloc -wrap realloc -wrap free
-LINK_TAIL += -wrap getenv
+LINK_TAIL += -wrap getenv -wrap memcpy
 LINK_TAIL += -wrap printf -wrap vprintf
 
 SRCS := main.c
 SRCS += jit.cpp
 
 SRCS += guard.cpp icxxabi.cpp
-SRCS += mem.c
+SRCS += mem.c memcpy.c
 SRCS += abs.c dl.c libc.c gcc.c printf.c strchr.c
 
 # Pull in libkern definitions for common functions
