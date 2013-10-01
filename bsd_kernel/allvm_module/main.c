@@ -27,9 +27,19 @@ typedef void (*func_ptr) (void);
 static func_ptr __CTOR_LIST__[1]
   __attribute__ ((__unused__, section(".ctors"), aligned(sizeof(func_ptr))))
   = { (func_ptr) (-1) };
-static func_ptr __CTOR_END__[1]
-  __attribute__((section(".ctors"), aligned(sizeof(func_ptr))))
-  = { (func_ptr) 0 };
+
+static void call_ctors() {
+  printf("CTOR_LIST: %p\n", &__CTOR_LIST__);
+  func_ptr *start = &__CTOR_LIST__[1];
+  func_ptr *end = start;
+  while (*end) ++end;
+  int ctor_count = (end - start);
+  for (int i = 0; i < ctor_count; ++i) {
+    func_ptr ctor = start[ctor_count-i-1];
+    printf("Calling ctor: %p\n", ctor);
+    ctor();
+  }
+}
 
 /*
  * Load handler that deals with the loading and unloading of a KLD.
@@ -40,9 +50,10 @@ static int jit_loader(struct module *m, int what, void *arg) {
   case MOD_LOAD: /* kldload */
     printf("ALLVM-JIT KLD loaded.\n");
 
+    call_ctors();
+
     printf("Testing JIT...\n");
-    printf("CTOR_LIST: %p\n", &__CTOR_LIST__);
-    printf("CTOR_END: %p\n", &__CTOR_END__);
+    //printf("CTOR_END: %p\n", &__CTOR_END__);
     printf("testJIT() returned: %d\n", testJIT(false));
 
     break;

@@ -92,10 +92,10 @@ Function *populateTestModule(Module *M, LLVMContext &C) {
 
 int testJIT(char go) {
   printf("testJIT() entry\n");
-  //InitializeNativeTarget();
+  InitializeNativeTarget();
 
   printf("A1\n");
-  //LLVMContext Context;
+  LLVMContext Context;
   std::vector<int> ints;
   ints.push_back(go);
   ints.push_back(go*go);
