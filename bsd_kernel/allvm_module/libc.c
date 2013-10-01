@@ -16,7 +16,9 @@
 void *__error = 0;
 
 // TODO: Almost certainly terrible
+void *__stdinp = 0;
 void *__stderrp = 0;
+void *__stdoutp = 0;
 
 void __assert(const char *, const char *, int, const char *);
 void __assert(const char * function, const char * file, int line, const char *expression) {
@@ -46,10 +48,13 @@ int isspace(int c) {
          c == '\t' || c == '\v';
 }
 
+UNSUPPORTED(__xuname);
+UNSUPPORTED(_exit);
 UNSUPPORTED(abort);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
 UNSUPPORTED(atoi);
+UNSUPPORTED(clearerr);
 UNSUPPORTED(clock_gettime);
 UNSUPPORTED(close);
 UNSUPPORTED(closedir);
@@ -60,14 +65,19 @@ UNSUPPORTED(execve);
 UNSUPPORTED(exit);
 UNSUPPORTED(fabs);
 UNSUPPORTED(fclose);
+UNSUPPORTED(fcntl);
 UNSUPPORTED(feof);
 UNSUPPORTED(ferror);
+UNSUPPORTED(fflush);
+UNSUPPORTED(fileno);
 UNSUPPORTED(fopen);
 UNSUPPORTED(fork);
+UNSUPPORTED(fprintf);
 UNSUPPORTED(fputc);
-UNSUPPORTED(fputs);
 UNSUPPORTED(fread);
+UNSUPPORTED(fseek);
 UNSUPPORTED(fstat);
+UNSUPPORTED(ftell);
 UNSUPPORTED(ftruncate);
 UNSUPPORTED(futimes);
 UNSUPPORTED(fwrite);
@@ -99,7 +109,6 @@ UNSUPPORTED(pread);
 UNSUPPORTED(raise);
 UNSUPPORTED(read);
 UNSUPPORTED(readdir);
-UNSUPPORTED(realloc);
 UNSUPPORTED(realpath);
 UNSUPPORTED(remove);
 UNSUPPORTED(rename);
@@ -124,6 +133,3 @@ UNSUPPORTED(wait);
 UNSUPPORTED(waitpid);
 UNSUPPORTED(write);
 UNSUPPORTED(writev);
-
-UNSUPPORTED(__xuname);
-UNSUPPORTED(_exit);

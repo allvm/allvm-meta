@@ -24,7 +24,7 @@ SRCS := main.c jit.cpp
 
 SRCS += icxxabi.cpp
 SRCS += mem.c
-SRCS += abs.c dl.c libc.c gcc.c pthread.c strchr.c tinfo.c unwind.c
+SRCS += abs.c dl.c libc.c gcc.c strchr.c
 LIBKERN_SRC := memchr.c
 
 SRCS += ${LIBKERN_SRC}
