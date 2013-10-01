@@ -102,12 +102,13 @@ int testJIT(char go) {
   // Now we create the JIT.
   ExecutionEngine* EE = EngineBuilder(M).create();
   std::vector<GenericValue> noargs;
-  GenericValue gv = EE->runFunction(MainF, noargs);
-
+  intptr_t ptr = (intptr_t)EE->getPointerToFunction(MainF);
+//  GenericValue gv = EE->runFunction(MainF, noargs);
   EE->freeMachineCodeForFunction(MainF);
   delete EE;
 
   // XXX: Eventually be good about calling llvm_shutdown() ?
 
-  return gv.IntVal.getZExtValue();
+  //return gv.IntVal.getZExtValue();
+  return (int)ptr;
 }
