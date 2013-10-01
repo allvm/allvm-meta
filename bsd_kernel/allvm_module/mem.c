@@ -100,36 +100,3 @@ int munmap(void *addr, size_t len) {
 }
 
 
-//===-- Define C++ operations in terms of alloc/dealloc -------------------===//
-
-// operator new[](unsigned long)
-void* _Znam(unsigned long sz);
-void* _Znam(unsigned long sz) {
-  return alloc(sz);
-}
-// operator new(unsigned long)
-void *_Znwm(unsigned long sz);
-void *_Znwm(unsigned long sz) {
-  return alloc(sz);
-}
-// operator new(unsigned long, std::nothrow_t const&)
-void *_ZnwmRKSt9nothrow_t(unsigned long sz, int unused);
-void *_ZnwmRKSt9nothrow_t(unsigned long sz, int unused) {
-  return alloc(sz);
-}
-
-// operator delete[](void*)
-void _ZdaPv(void *p);
-void _ZdaPv(void *p) {
-  dealloc(p);
-}
-// operator delete(void*)
-void _ZdlPv(void *p);
-void _ZdlPv(void *p) {
-  dealloc(p);
-}
-// operator delete(void*, std::nothrow_t const&)
-void _ZdlPvRKSt9nothrow_t(void *p, int unused);
-void _ZdlPvRKSt9nothrow_t(void *p, int unused) {
-  dealloc(p);
-}
