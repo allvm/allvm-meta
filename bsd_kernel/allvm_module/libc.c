@@ -36,6 +36,13 @@ int isdigit(int c) {
   return '0' <= c && c <= '9';
 }
 
+int isxdigit(int c);
+int isxdigit(int c) {
+  return isdigit(c) ||
+    ('a' <= c && c <= 'f') ||
+    ('A' <= c && c <= 'F');
+}
+
 int isalnum(int c);
 int isalnum(int c) {
   return isalpha(c) || isdigit(c);
