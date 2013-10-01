@@ -19,7 +19,7 @@
 #include <sys/systm.h> /* uprintf */
 
 static inline const char* nullstr(const char *str) {
-  return str ? "<null>" : str;
+  return str ? str : "<null>";
 }
 
 
