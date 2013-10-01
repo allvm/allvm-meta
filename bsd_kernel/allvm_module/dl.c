@@ -13,9 +13,17 @@
 
 #include "stubs.h"
 
+static void* const SELF_HANDLE = (void*)0xABC;
+
+static const char* nullstr(const char *str) {
+  return str ? "<null>" : str;
+}
+
 void* dlopen(const char*filename, int flag);
 void* dlopen(const char*filename, int flag) {
-  printf("[ALLVM] dlopen(filename=%s, flag=%d)\n", filename, flag);
+  printf("[ALLVM] dlopen(filename=%s, flag=%d)\n", nullstr(filename), flag);
+  if (!filename)
+    return SELF_HANDLE;
   return 0;
 }
 
