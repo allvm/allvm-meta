@@ -90,7 +90,14 @@ Function *populateTestModule(Module *M, LLVMContext &C) {
   return FooF;
 }
 
+void LLVMErrorHandler(void *user_data, const std::string&reason, bool gen_crash_diag) {
+  printf("LLVM FATAL ERROR: reason=%s, user_data=%p, gen_crash_diag=%d\n",
+         reason.c_str(), user_data, gen_crash_diag);
+}
+
 int testJIT(char go) {
+  ScopedFatalErrorHandler Err(LLVMErrorHandler);
+
   printf("testJIT() entry\n");
   InitializeNativeTarget();
 
