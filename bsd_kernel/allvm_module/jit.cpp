@@ -105,7 +105,11 @@ int testJIT(char go) {
 
   printf("A4\n");
   // Now we create the JIT.
-  ExecutionEngine* EE = EngineBuilder(M).create();
+  EngineBuilder Builder(M);
+  Builder.setCodeModel(CodeModel::Kernel);
+  Builder.setRelocationModel(Reloc::Static);
+  Builder.setUseMCJIT(true);
+  ExecutionEngine* EE = Builder.create();
   printf("A5\n");
   std::vector<GenericValue> noargs;
   printf("A6\n");
