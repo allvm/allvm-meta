@@ -103,7 +103,6 @@ int testJIT(char go) {
   printf("testJIT() entry\n");
   InitializeNativeTarget();
   InitializeNativeTargetAsmPrinter();
-  InitializeNativeTargetAsmParser();
 
   printf("A1\n");
   LLVMContext Context;
