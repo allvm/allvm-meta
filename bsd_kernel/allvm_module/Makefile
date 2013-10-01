@@ -81,7 +81,7 @@ reloccheck: unsupported_relocs
 
 sync:
 	-mv $(HOME)/bkup.txz $(HOME)/bkup.old.txz
-	cd ../../.. && tar cJf $(HOME)/bkup.txz allvm-meta
+	cd `readlink -f .`/../../.. && tar cJf $(HOME)/bkup.txz allvm-meta
 	sync
 	sync
 	sync
