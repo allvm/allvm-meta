@@ -22,13 +22,14 @@ CXXFLAGS += ${LLVM_CXXFLAGS}
 LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} /usr/lib/libm.a
 LINK_TAIL += -wrap malloc -wrap realloc -wrap free
 LINK_TAIL += -wrap getenv
+LINK_TAIL += -wrap printf -wrap vprintf
 
 SRCS := main.c
 SRCS += jit.cpp
 
 SRCS += guard.cpp icxxabi.cpp
 SRCS += mem.c
-SRCS += abs.c dl.c libc.c gcc.c strchr.c
+SRCS += abs.c dl.c libc.c gcc.c printf.c strchr.c
 
 # Pull in libkern definitions for common functions
 LIBKERN_SRC += strcat.c strcmp.c strcpy.c strcspn.c strdup.c strlcat.c strlcpy.c strlen.c
