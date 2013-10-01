@@ -14,6 +14,10 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <sys/types.h>
 #include <sys/module.h>
 
@@ -32,5 +36,9 @@ static inline const char* nullstr(const char *str) {
   void name() { BAIL(); }
 
 #define TRACE() printf("<TRACE> Call to '%s'\n", __FUNCTION__)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // _COMMON_H_
