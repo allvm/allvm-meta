@@ -13,12 +13,13 @@ CXXFLAGS += -Werror
 
 LLVM_CXXFLAGS != ${LLVM_CONFIG} --cxxflags
 LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS}
+LLVM_LDFLAGS := ${LLVM_LDFLAGS:N-lz:N-lm}
 
 CXX := /home/will/src/uclibc-install/bin/g++-uc
 LIBCXX := /home/will/src/uclibc-install/lib/libuClibc++.a
 
 CXXFLAGS += ${LLVM_CXXFLAGS}
-LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} -lm -wrap malloc -wrap realloc -wrap free
+LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} /usr/lib/libm.a -wrap malloc -wrap realloc -wrap free
 
 SRCS := main.c
 SRCS += jit.cpp
@@ -87,3 +88,4 @@ insn-swap: insn-swap.cc
 	${CXX} -I/usr/local/include ${.ALLSRC} ${LLVM_CXXFLAGS} ${INSN_LDFLAGS} -o ${.TARGET}
 
 CLEANFILES += insn-swap
+LD := /usr/bin/ld
