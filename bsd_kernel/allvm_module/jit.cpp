@@ -92,7 +92,7 @@ Function *populateTestModule(Module *M, LLVMContext &C) {
 
 int testJIT(char go) {
   printf("testJIT() entry\n");
-  InitializeNativeTarget();
+  //InitializeNativeTarget();
 
   printf("A1\n");
   LLVMContext Context;
@@ -105,20 +105,20 @@ int testJIT(char go) {
 
   printf("A4\n");
   // Now we create the JIT.
-  ExecutionEngine* EE = EngineBuilder(M).create();
-  printf("A5\n");
-  std::vector<GenericValue> noargs;
-  printf("A6\n");
-  intptr_t ptr = (intptr_t)EE->getPointerToFunction(MainF);
+  //ExecutionEngine* EE = EngineBuilder(M).create();
+  //printf("A5\n");
+  //std::vector<GenericValue> noargs;
+  //printf("A6\n");
+  //intptr_t ptr = (intptr_t)EE->getPointerToFunction(MainF);
 //  GenericValue gv = EE->runFunction(MainF, noargs);
   printf("A7\n");
-  EE->freeMachineCodeForFunction(MainF);
+  //EE->freeMachineCodeForFunction(MainF);
   printf("A8\n");
-  delete EE;
+  //delete EE;
 
   // XXX: Eventually be good about calling llvm_shutdown() ?
 
   //return gv.IntVal.getZExtValue();
   printf("A9\n");
-  return (int)ptr;
+  return (int)(intptr_t)(MainF);
 }

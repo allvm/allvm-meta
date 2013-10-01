@@ -70,6 +70,8 @@ reloccheck: unsupported_relocs
 	@echo "Check passed (none found)!"
 
 sync:
+	-rm $(HOME)/bkup.txz
+	cd ../../.. && tar cJf $(HOME)/bkup.txz allvm-meta
 	sync
 	sync
 	sync
