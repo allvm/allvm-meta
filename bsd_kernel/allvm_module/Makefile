@@ -70,11 +70,12 @@ reloccheck: unsupported_relocs
 	@echo "Check passed (none found)!"
 
 sync:
-	-rm $(HOME)/bkup.txz
+	-mv $(HOME)/bkup.txz $(HOME)/bkup.old.txz
 	cd ../../.. && tar cJf $(HOME)/bkup.txz allvm-meta
 	sync
 	sync
 	sync
+	sleep 2
 
 # Refuse to try loading kernel if we still have undef symbols..
 load: symcheck reloccheck sync
