@@ -11,7 +11,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "stubs.h"
+#include "common.h"
 
 void *__error = 0;
 
@@ -46,6 +46,12 @@ int isspace(int c) {
   return c == ' '  || c == '\f' ||
          c == '\n' || c == '\r' ||
          c == '\t' || c == '\v';
+}
+
+char *__wrap_getenv(const char* key);
+char *__wrap_getenv(const char* key) {
+  printf("[ALLVM] getenv(key=%s)\n", nullstr(key));
+  return 0;
 }
 
 UNSUPPORTED(__xuname);

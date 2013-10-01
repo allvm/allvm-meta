@@ -11,7 +11,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "stubs.h"
+#include "common.h"
 
 void __register_frame(void *);
 void __deregister_frame(void*);

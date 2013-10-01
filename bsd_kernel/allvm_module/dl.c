@@ -11,13 +11,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "stubs.h"
+#include "common.h"
 
 static void* const SELF_HANDLE = (void*)0xABC;
-
-static const char* nullstr(const char *str) {
-  return str ? "<null>" : str;
-}
 
 void* dlopen(const char*filename, int flag);
 void* dlopen(const char*filename, int flag) {

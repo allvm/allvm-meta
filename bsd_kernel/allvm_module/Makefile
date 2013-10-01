@@ -19,7 +19,9 @@ CXX := /home/will/src/uclibc-install/bin/g++-uc
 LIBCXX := /home/will/src/uclibc-install/lib/libuClibc++.a
 
 CXXFLAGS += ${LLVM_CXXFLAGS}
-LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} /usr/lib/libm.a -wrap malloc -wrap realloc -wrap free
+LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} /usr/lib/libm.a 
+LINK_TAIL += -wrap malloc -wrap realloc -wrap free
+LINK_TAIL += -wrap getenv
 
 SRCS := main.c
 SRCS += jit.cpp
