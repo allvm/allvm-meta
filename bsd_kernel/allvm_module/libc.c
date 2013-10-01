@@ -50,7 +50,7 @@ int isspace(int c) {
 
 char *__wrap_getenv(const char* key);
 char *__wrap_getenv(const char* key) {
-  printf("[ALLVM] getenv(key=%s)\n", nullstr(key));
+  printf("getenv(key=%s)\n", nullstr(key));
   return 0;
 }
 

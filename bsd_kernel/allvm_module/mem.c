@@ -26,12 +26,13 @@ void *__real_realloc(void *addr, unsigned long size, struct malloc_type *type, i
 void __real_free(void *addr, struct malloc_type *type);
 
 static inline void* alloc(unsigned long sz) {
-  printf("[ALLVM] alloc(%lu)\n", sz);
-  return __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
+  void *ptr = __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
+  printf("alloc(%lu) = %p\n", sz, ptr);
+  return ptr;
 }
 
 static inline void dealloc(void *p) {
-  printf("[ALLVM] dealloc(%p)\n", p);
+  printf("dealloc(%p)\n", p);
   return __real_free(p, allvm_mem);
 }
 
@@ -76,14 +77,14 @@ void *mmap(void *addr, size_t len, int prot, int flags,
   void *MAP_FAILED = (void*)-1;
   unsigned MAP_ANONYMOUS = 0x1000;
 
-  printf("[ALLVM] mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
+  printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
          addr, len, prot, flags, fildes, off);
   if ((len & (getpagesize() - 1)) != 0) {
-    printf("[ALLVM] Invalid len to mmap: %zu\n", len);
+    printf("  \\-> Invalid len to mmap: %zu\n", len);
     return MAP_FAILED;
   }
   if (!(flags & MAP_ANONYMOUS)) {
-    printf("[ALLVM] Only anonymous mapping supported\n");
+    printf(" \\-> Only anonymous mapping supported\n");
     return MAP_FAILED;
   }
 
@@ -93,7 +94,7 @@ void *mmap(void *addr, size_t len, int prot, int flags,
 
 int munmap(void *addr, size_t len);
 int munmap(void *addr, size_t len) {
-  printf("[ALLVM] munmap(addr=%p, len=%zu)\n", addr, len);
+  printf("munmap(addr=%p, len=%zu)\n", addr, len);
   // TODO: Don't leak badly here :(
   return 0;
 }
