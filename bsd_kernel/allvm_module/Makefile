@@ -67,8 +67,13 @@ reloccheck: unsupported_relocs
 	@test ! -s ${.ALLSRC} || (cat ${.ALLSRC} && exit 1)
 	@echo "Check passed (none found)!"
 
+sync:
+	sync
+	sync
+	sync
+
 # Refuse to try loading kernel if we still have undef symbols..
-load: symcheck reloccheck
+load: symcheck reloccheck sync
 
 #############################
 # insn-swap building
