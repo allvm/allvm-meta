@@ -35,6 +35,8 @@ LIBKERN_SRC += strcat.c strcmp.c strcpy.c strcspn.c strdup.c strlcat.c strlcpy.c
 LIBKERN_SRC += strncmp.c strncpy.c strnlen.c
 LIBKERN_SRC += strcasecmp.c strsep.c strspn.c strstr.c strtol.c strtoq.c
 LIBKERN_SRC += memchr.c memcmp.c memmove.c memset.c
+LIBKERN_SRC += index.c rindex.c
+LIBKERN_SRC += qsort.c qsort_r.c
 
 SRCS += ${LIBKERN_SRC}
 
