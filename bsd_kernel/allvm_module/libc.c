@@ -16,9 +16,9 @@
 void *__error = 0;
 
 // TODO: Almost certainly terrible
-void *__stdinp = 0;
-void *__stderrp = 0;
-void *__stdoutp = 0;
+void *__stdinp = (void*)0xAAAA0000;
+void *__stderrp = (void*)0xBBBB0000;
+void *__stdoutp = (void*)0xCCCC0000;
 
 void __assert(const char *, const char *, int, const char *);
 void __assert(const char * function, const char * file, int line, const char *expression) {
