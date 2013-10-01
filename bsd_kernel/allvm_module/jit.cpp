@@ -22,6 +22,8 @@
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/TargetSelect.h"
 
+#include "llvm/CodeGen/LinkAllCodegenComponents.h"
+
 #include <vector>
 
 using namespace llvm;
@@ -100,6 +102,8 @@ int testJIT(char go) {
 
   printf("testJIT() entry\n");
   InitializeNativeTarget();
+  InitializeNativeTargetAsmPrinter();
+  InitializeNativeTargetAsmParser();
 
   printf("A1\n");
   LLVMContext Context;
