@@ -60,6 +60,11 @@ int gettimeofday(void *tp, void *tzp) {
   return -1;
 }
 
+char *getcwd(char *buf, size_t size);
+char *getcwd(char *buf, size_t size) {
+  return 0;
+}
+
 UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
 UNSUPPORTED(abort);
@@ -93,7 +98,6 @@ UNSUPPORTED(ftell);
 UNSUPPORTED(ftruncate);
 UNSUPPORTED(futimes);
 UNSUPPORTED(fwrite);
-UNSUPPORTED(getcwd);
 UNSUPPORTED(getpid);
 UNSUPPORTED(getrlimit);
 UNSUPPORTED(getrusage);
