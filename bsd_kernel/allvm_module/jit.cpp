@@ -95,13 +95,20 @@ int testJIT(char go) {
   //InitializeNativeTarget();
 
   printf("A1\n");
-  LLVMContext Context;
+  //LLVMContext Context;
+  std::vector<int> ints;
+  ints.push_back(go);
+  ints.push_back(go*go);
+  ints.push_back(go+go);
+
+  for (int i = 0, e = ints.size(); i != e; ++i)
+    printf("ints[%d] = %d\n", i, ints[i]);
 
   printf("A2\n");
-  Module *M = new Module("test", Context);
+  //Module *M = new Module("test", Context);
 
   printf("A3\n");
-  Function *MainF = populateTestModule(M, Context);
+  ///Function *MainF = populateTestModule(M, Context);
 
   printf("A4\n");
   // Now we create the JIT.
@@ -120,5 +127,5 @@ int testJIT(char go) {
 
   //return gv.IntVal.getZExtValue();
   printf("A9\n");
-  return (int)(intptr_t)(MainF);
+  return 0;
 }
