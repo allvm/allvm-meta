@@ -20,9 +20,10 @@ LIBCXX := /home/will/src/uclibc-install/lib/libuClibc++.a
 CXXFLAGS += ${LLVM_CXXFLAGS}
 LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} -lm -wrap malloc -wrap realloc -wrap free
 
-SRCS := main.c jit.cpp
+SRCS := main.c
+SRCS += jit.cpp
 
-SRCS += icxxabi.cpp
+SRCS += guard.cpp icxxabi.cpp
 SRCS += mem.c
 SRCS += abs.c dl.c libc.c gcc.c strchr.c
 LIBKERN_SRC := memchr.c
