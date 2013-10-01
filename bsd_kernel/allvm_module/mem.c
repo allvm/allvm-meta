@@ -61,6 +61,43 @@ void __wrap_free(void *ptr) {
   dealloc(ptr);
 }
 
+int getpagesize(void);
+int getpagesize(void) {
+  // Obtained from 'sysctl hw.pagesize', TODO: Get this from kernel
+  return 4096;
+}
+
+void *mmap(void *addr, size_t len, int prot, int flags,
+           int fildes, off_t off);
+void *mmap(void *addr, size_t len, int prot, int flags,
+           int fildes, off_t off) {
+
+  // From sys/mman.h:
+  void *MAP_FAILED = (void*)-1;
+  unsigned MAP_ANONYMOUS = 0x1000;
+
+  printf("[ALLVM] mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
+         addr, len, prot, flags, fildes, off);
+  if ((len & (getpagesize() - 1)) != 0) {
+    printf("[ALLVM] Invalid len to mmap: %zu\n", len);
+    return MAP_FAILED;
+  }
+  if (!(flags & MAP_ANONYMOUS)) {
+    printf("[ALLVM] Only anonymous mapping supported\n");
+    return MAP_FAILED;
+  }
+
+  // XXX: current allocator already fills with zero
+  return alloc(len);
+}
+
+int munmap(void *addr, size_t len);
+int munmap(void *addr, size_t len) {
+  printf("[ALLVM] munmap(addr=%p, len=%zu)\n", addr, len);
+  // TODO: Don't leak badly here :(
+  return 0;
+}
+
 
 //===-- Define C++ operations in terms of alloc/dealloc -------------------===//
 

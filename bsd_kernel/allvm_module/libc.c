@@ -48,22 +48,6 @@ int isspace(int c) {
          c == '\t' || c == '\v';
 }
 
-int getpagesize(void);
-int getpagesize(void) {
-  // Obtained from 'sysctl hw.pagesize', TODO: Get this from kernel
-  return 4096;
-}
-
-void *mmap(void *addr, size_t len, int prot, int flags,
-           int fildes, off_t off);
-void *mmap(void *addr, size_t len, int prot, int flags,
-           int fildes, off_t off) {
-  printf("[ALLVM] mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu\n",
-         addr, len, prot, flags, fildes, off);
-  return 0;
-}
-
-
 UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
 UNSUPPORTED(abort);
@@ -111,7 +95,6 @@ UNSUPPORTED(localtime_r);
 UNSUPPORTED(lseek);
 UNSUPPORTED(mkdir);
 UNSUPPORTED(mprotect);
-UNSUPPORTED(munmap);
 UNSUPPORTED(open);
 UNSUPPORTED(opendir);
 UNSUPPORTED(posix_spawn);
