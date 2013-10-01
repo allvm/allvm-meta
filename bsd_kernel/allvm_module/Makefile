@@ -29,7 +29,12 @@ SRCS += jit.cpp
 SRCS += guard.cpp icxxabi.cpp
 SRCS += mem.c
 SRCS += abs.c dl.c libc.c gcc.c strchr.c
-LIBKERN_SRC := memchr.c
+
+# Pull in libkern definitions for common functions
+LIBKERN_SRC += strcat.c strcmp.c strcpy.c strcspn.c strdup.c strlcat.c strlcpy.c strlen.c
+LIBKERN_SRC += strncmp.c strncpy.c strnlen.c
+LIBKERN_SRC += strcasecmp.c strsep.c strspn.c strstr.c strtol.c strtoq.c
+LIBKERN_SRC += memchr.c memcmp.c memmove.c memset.c
 
 SRCS += ${LIBKERN_SRC}
 
