@@ -35,12 +35,17 @@ ssize_t write(int fd, const void *buf, size_t count) {
   while (start != end) {
     const char * newline = std::find(start, end, '\n');
     if (newline != end) {
+      // Write prefix
+      __real_printf("[ALLVM-IO] ");
+
       // Print buffered contents
       std::for_each(buffer.begin(), buffer.end(), print_char);
       buffer.clear();
 
       // And portion of line until newline
       std::for_each(start, newline, print_char);
+
+      // And end line
       __real_printf("\n");
       start = ++newline;
     } else {
