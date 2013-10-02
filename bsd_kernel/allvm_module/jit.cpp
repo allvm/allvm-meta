@@ -13,6 +13,7 @@
 
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/JIT.h"
+#include "llvm/ExecutionEngine/MCJIT.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/IRBuilder.h"
@@ -102,16 +103,16 @@ int testJIT(char go) {
 
   printf("testJIT() entry\n");
   InitializeNativeTarget();
-  PassRegistry &Registry = *PassRegistry::getPassRegistry();
-                  initializeCore(Registry);
-                  initializeScalarOpts(Registry);
-                  initializeIPO(Registry);
-                  initializeAnalysis(Registry);
-                  initializeIPA(Registry);
-                  initializeTransformUtils(Registry);
-                  initializeInstCombine(Registry);
-                  initializeCodeGen(Registry);
-                  initializeTarget(Registry);
+  //PassRegistry &Registry = *PassRegistry::getPassRegistry();
+  //                initializeCore(Registry);
+  //                initializeScalarOpts(Registry);
+  //                initializeIPO(Registry);
+  //                initializeAnalysis(Registry);
+  //                initializeIPA(Registry);
+  //                initializeTransformUtils(Registry);
+  //                initializeInstCombine(Registry);
+  //                initializeCodeGen(Registry);
+  //                initializeTarget(Registry);
 
   printf("A1\n");
   LLVMContext Context;
@@ -127,7 +128,7 @@ int testJIT(char go) {
   EngineBuilder Builder(M);
   Builder.setCodeModel(CodeModel::Kernel);
   Builder.setRelocationModel(Reloc::Static);
-  Builder.setUseMCJIT(false);
+  Builder.setUseMCJIT(true);
   ExecutionEngine* EE = Builder.create();
   printf("A5\n");
   std::vector<GenericValue> noargs;
