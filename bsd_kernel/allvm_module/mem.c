@@ -27,12 +27,12 @@ void __real_free(void *addr, struct malloc_type *type);
 
 static inline void* alloc(unsigned long sz) {
   void *ptr = __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
-  printf("alloc(%lu) = %p\n", sz, ptr);
+  // printf("alloc(%lu) = %p\n", sz, ptr);
   return ptr;
 }
 
 static inline void dealloc(void *p) {
-  printf("dealloc(%p)\n", p);
+  // printf("dealloc(%p)\n", p);
   return __real_free(p, allvm_mem);
 }
 
@@ -84,12 +84,14 @@ void *mmap(void *addr, size_t len, int prot, int flags,
     return MAP_FAILED;
   }
   if (!(flags & MAP_ANONYMOUS)) {
-    printf(" \\-> Only anonymous mapping supported\n");
+    printf("  \\-> Only anonymous mapping supported\n");
     return MAP_FAILED;
   }
 
-  // XXX: current allocator already fills with zero
-  return alloc(len);
+  //  (current allocator already fills with zero)
+  void * ptr = alloc(len);
+  printf(" \\-> ptr: %p\n", ptr);
+  return ptr;
 }
 
 int munmap(void *addr, size_t len);
