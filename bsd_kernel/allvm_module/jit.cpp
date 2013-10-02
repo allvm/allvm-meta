@@ -118,7 +118,7 @@ int testJIT(char go) {
   EngineBuilder Builder(M);
   Builder.setCodeModel(CodeModel::Kernel);
   Builder.setRelocationModel(Reloc::Static);
-  Builder.setUseMCJIT(true);
+  Builder.setUseMCJIT(false);
   ExecutionEngine* EE = Builder.create();
   printf("A5\n");
   std::vector<GenericValue> noargs;
