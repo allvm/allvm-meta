@@ -87,9 +87,13 @@ off_t lseek(int fd, off_t offset, int whence) {
   return -1;
 }
 
+void abort(void);
+void abort(void) {
+  panic("[ALLVM] ABORT CALLED!\n");
+}
+
 UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
-UNSUPPORTED(abort);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
 UNSUPPORTED(atoi);
