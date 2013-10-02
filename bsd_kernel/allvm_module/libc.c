@@ -22,7 +22,11 @@ void *__stdoutp = (void*)0xCCCC0000;
 
 void __assert(const char *, const char *, int, const char *);
 void __assert(const char * function, const char * file, int line, const char *expression) {
-  panic("Assertion failure in %s at %s:%d: \"%s\"\n", function, file, line, expression);
+  printf("Assertion failure!\n");
+  printf("Assertion failure in %s at %s:%d: \"%s\"\n", nullstr(function),
+        nullstr(file), line, nullstr(expression));
+  panic("Assertion failure in %s at %s:%d: \"%s\"\n", nullstr(function),
+        nullstr(file), line, nullstr(expression));
 }
 
 int isalpha(int c);
