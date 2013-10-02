@@ -3,6 +3,8 @@
 cpu		HAMMER
 ident		ALLVM
 
+makeoptions DEBUG=-g
+
 options 	SCHED_ULE		# ULE scheduler
 options 	PREEMPTION		# Enable kernel thread preemption
 options 	INET			# InterNETworking
@@ -61,6 +63,11 @@ options 	INCLUDE_CONFIG_FILE     # Include this file in kernel
 options 	KDB			# Kernel debugger related code
 options 	KDB_TRACE		# Print a stack trace for a panic
 # options 	DDB_CTF			# kernel ELF linker loads CTF data
+options DDB
+options GDB
+options BREAK_TO_DEBUGGER
+# options DEBUG_MEMGUARD
+
 
 # Make an SMP-capable kernel by default
 options 	SMP			# Symmetric MultiProcessor Kernel
@@ -156,6 +163,8 @@ device		splash		# Splash screen and screen saver support
 # syscons is the default console driver, resembling an SCO console
 device		sc
 options 	SC_PIXEL_MODE	# add support for the raster text mode
+options SC_HISTORY_SIZE=5000
+options MSGBUF_SIZE=65536
 
 device		agp		# support several AGP chipsets
 
