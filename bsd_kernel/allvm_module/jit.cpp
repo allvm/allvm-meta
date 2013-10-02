@@ -102,7 +102,16 @@ int testJIT(char go) {
 
   printf("testJIT() entry\n");
   InitializeNativeTarget();
-  InitializeNativeTargetAsmPrinter();
+  PassRegistry &Registry = *PassRegistry::getPassRegistry();
+                  initializeCore(Registry);
+                  initializeScalarOpts(Registry);
+                  initializeIPO(Registry);
+                  initializeAnalysis(Registry);
+                  initializeIPA(Registry);
+                  initializeTransformUtils(Registry);
+                  initializeInstCombine(Registry);
+                  initializeCodeGen(Registry);
+                  initializeTarget(Registry);
 
   printf("A1\n");
   LLVMContext Context;
