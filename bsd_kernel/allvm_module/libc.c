@@ -76,6 +76,17 @@ char *getcwd(char *buf, size_t size) {
   return 0;
 }
 
+void perror(const char *s);
+void perror(const char *s) {
+  printf("perror(s=%s)\n", nullstr(s));
+}
+
+off_t lseek(int fd, off_t offset, int whence);
+off_t lseek(int fd, off_t offset, int whence) {
+  TRACE();
+  return -1;
+}
+
 UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
 UNSUPPORTED(abort);
@@ -118,7 +129,6 @@ UNSUPPORTED(isprint);
 UNSUPPORTED(kill);
 UNSUPPORTED(link);
 UNSUPPORTED(localtime_r);
-UNSUPPORTED(lseek);
 UNSUPPORTED(mkdir);
 UNSUPPORTED(mprotect);
 UNSUPPORTED(open);
@@ -154,5 +164,4 @@ UNSUPPORTED(truncate);
 UNSUPPORTED(unlink);
 UNSUPPORTED(wait);
 UNSUPPORTED(waitpid);
-UNSUPPORTED(write);
 UNSUPPORTED(writev);
