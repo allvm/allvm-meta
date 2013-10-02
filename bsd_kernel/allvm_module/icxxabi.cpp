@@ -15,6 +15,7 @@ void *__dso_handle = 0;
 int __cxa_atexit(void (*f)(void *), void *objptr, void *dso) {
   TRACE();
   if (__atexit_func_count >= ATEXIT_MAX_FUNCS) {
+    printf("__cxa_atexit() overflow!\n");
     return -1;
   }
   __atexit_funcs[__atexit_func_count].destructor_func = f;

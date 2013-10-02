@@ -1,7 +1,7 @@
 #ifndef _ICXXABI_H
 #define _ICXXABI_H
 
-#define ATEXIT_MAX_FUNCS 128
+#define ATEXIT_MAX_FUNCS 1024
 
 #ifdef __cplusplus
 extern "C" {
