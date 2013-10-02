@@ -201,7 +201,7 @@ ${KMOD}.kld: ${OBJS}
 .else
 ${FULLPROG}: ${OBJS}
 .endif
-	${LD} ${LDFLAGS} -Ur -d -o ${.TARGET} ${OBJS} ${LINK_TAIL}
+	${LD} ${LDFLAGS} -r -d -o ${.TARGET} ${OBJS} ${LINK_TAIL}
 .if defined(MK_CTF) && ${MK_CTF} != "no"
 	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${OBJS}
 .endif
