@@ -20,34 +20,11 @@
 
 // CXX support
 #include "icxxabi.h"
+// ctor/dtors support
+#include "begin.h"
 
 extern int testJIT(char go);
 
-typedef void (*func_ptr) (void);
-static func_ptr __CTOR_LIST__[1]
-  __attribute__ ((__unused__, section(".ctors"), aligned(sizeof(func_ptr))))
-  = { (func_ptr) (-1) };
-static func_ptr __DTOR_LIST__[1]
-  __attribute__ ((__unused__, section(".dtors"), aligned(sizeof(func_ptr))))
-  = { (func_ptr) (-1) };
-
-static void call_ctors(void) {
-  printf("Running constructors...\n");
-  func_ptr *start = &__CTOR_LIST__[1];
-  func_ptr *end = start;
-  while (*end) ++end;
-  int ctor_count = (end - start);
-  for (int i = 0; i < ctor_count; ++i) {
-    func_ptr ctor = start[ctor_count-i-1];
-    ctor();
-  }
-}
-
-static void call_dtors(void) {
-  printf("Running destructors...\n");
-  func_ptr *dtor = &__DTOR_LIST__[1];
-  while (*dtor) (*dtor++)();
-}
 
 /*
  * Load handler that deals with the loading and unloading of a KLD.
