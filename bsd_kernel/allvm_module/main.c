@@ -68,6 +68,7 @@ static int jit_loader(struct module *m, int what, void *arg) {
   case MOD_UNLOAD:
     printf("ALLVM-JIT unloaded.\n");
 
+    __cxa_finalize(NULL);
     call_dtors();
 
     break;
