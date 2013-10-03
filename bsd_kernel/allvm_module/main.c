@@ -27,18 +27,26 @@ typedef void (*func_ptr) (void);
 static func_ptr __CTOR_LIST__[1]
   __attribute__ ((__unused__, section(".ctors"), aligned(sizeof(func_ptr))))
   = { (func_ptr) (-1) };
+static func_ptr __DTOR_LIST__[1]
+  __attribute__ ((__unused__, section(".dtors"), aligned(sizeof(func_ptr))))
+  = { (func_ptr) (-1) };
 
 static void call_ctors(void) {
-  printf("CTOR_LIST: %p\n", &__CTOR_LIST__);
+  printf("Running constructors...\n");
   func_ptr *start = &__CTOR_LIST__[1];
   func_ptr *end = start;
   while (*end) ++end;
   int ctor_count = (end - start);
   for (int i = 0; i < ctor_count; ++i) {
     func_ptr ctor = start[ctor_count-i-1];
-    printf("Calling ctor: %p\n", ctor);
     ctor();
   }
+}
+
+static void call_dtors(void) {
+  printf("Running destructors...\n");
+  func_ptr *dtor = &__DTOR_LIST__[1];
+  while (*dtor) (*dtor++)();
 }
 
 /*
@@ -59,6 +67,9 @@ static int jit_loader(struct module *m, int what, void *arg) {
     break;
   case MOD_UNLOAD:
     printf("ALLVM-JIT unloaded.\n");
+
+    call_dtors();
+
     break;
   default:
     err = EOPNOTSUPP;
