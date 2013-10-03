@@ -18,35 +18,50 @@
 #include <sys/param.h>  /* defines used in kernel.h */
 #include <sys/kernel.h> /* types used in module initialization */
 
-// CXX support
 #include "icxxabi.h"
-// ctor/dtors support
 #include "begin.h"
 
-extern int testJIT(char go);
+#include "allvm.h"
 
+static void cxx_init(void) {
+    call_ctors();
+}
 
-/*
- * Load handler that deals with the loading and unloading of a KLD.
- */
+static void cxx_fini(void) {
+    __cxa_finalize(NULL);
+    call_dtors();
+}
+
+static void* jit_handle = 0;
+
+extern char bckernel_begin;
+extern char bckernel_end;
+
+// Handler invoked by kernel when module is loaded/unloaded
 static int jit_loader(struct module *m, int what, void *arg) {
   int err = 0;
   switch (what) {
   case MOD_LOAD: /* kldload */
-    printf("ALLVM-JIT KLD loaded.\n");
+    printf("Initializing ALLVM-JIT KLD...\n");
 
-    call_ctors();
+    cxx_init();
 
-    printf("Testing JIT...\n");
-    //printf("CTOR_END: %p\n", &__CTOR_END__);
-    printf("testJIT() returned: %d\n", testJIT(false));
-
+    jit_handle = createJIT(&bckernel_begin, &bckernel_end);
+    if (jit_handle) {
+      printf("Successfully initialized ALLVM-JIT with kernel.bc\n");
+      printf("ALLVM-JIT KLD loaded and initialized.\n");
+    } else {
+      printf("Failed to initialized ALLVM-JIT.\n");
+      // TODO: Set 'err' appropriately
+    }
     break;
   case MOD_UNLOAD:
     printf("ALLVM-JIT unloaded.\n");
 
-    __cxa_finalize(NULL);
-    call_dtors();
+    cxx_fini();
+
+    if (jit_handle)
+      destroyJIT(jit_handle);
 
     break;
   default:
