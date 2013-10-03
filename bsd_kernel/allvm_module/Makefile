@@ -102,4 +102,11 @@ insn-swap: insn-swap.cc
 	${CXX} -I/usr/local/include ${.ALLSRC} ${LLVM_CXXFLAGS} ${INSN_LDFLAGS} -o ${.TARGET}
 
 CLEANFILES += insn-swap
-LD := /usr/bin/ld
+
+
+#############################
+# Finalization
+#############################
+LINK_TAIL += fin.o
+CLEANFILES += fin.o
+${FULLPROG}: fin.o
