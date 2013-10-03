@@ -25,6 +25,14 @@ void print_char(char c) {
 }
 
 extern "C" ssize_t write(int fd, const void *buf, size_t count);
+
+static void __attribute__((destructor)) flush() {
+  const char * stdout_msg = "(Flushing stdout...)\n";
+  const char * stderr_msg = "(Flushing stderr...)\n";
+  write(1,  stdout_msg, strlen(stdout_msg));
+  write(2,  stderr_msg, strlen(stderr_msg));
+}
+
 ssize_t write(int fd, const void *buf, size_t count) {
   // Only support write() to stdout or stderr... (which are treated the same)
   if (fd != 1 && fd != 2)
