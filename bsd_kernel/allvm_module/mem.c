@@ -109,26 +109,28 @@ void *mmap(void *addr, size_t len, int prot, int flags,
   void *MAP_FAILED = (void*)-1;
   unsigned MAP_ANONYMOUS = 0x1000;
 
-  printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
-         addr, len, prot, flags, fildes, off);
   if ((len & (getpagesize() - 1)) != 0) {
+    printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
+           addr, len, prot, flags, fildes, off);
     printf("  \\-> Invalid len to mmap: %zu\n", len);
     return MAP_FAILED;
   }
   if (!(flags & MAP_ANONYMOUS)) {
+    printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
+           addr, len, prot, flags, fildes, off);
     printf("  \\-> Only anonymous mapping supported\n");
     return MAP_FAILED;
   }
 
   //  (current allocator already fills with zero)
   void * ptr = alloc(len);
-  printf(" \\-> ptr: %p\n", ptr);
+  // printf(" \\-> ptr: %p\n", ptr);
   return ptr;
 }
 
 int munmap(void *addr, size_t len);
 int munmap(void *addr, size_t len) {
-  printf("munmap(addr=%p, len=%zu)\n", addr, len);
+  // printf("munmap(addr=%p, len=%zu)\n", addr, len);
 
   if (!addr || extract_size(addr) != len) {
     printf("Unsupported use of munmap or bad pointer!\n");

@@ -17,7 +17,7 @@ static void* const SELF_HANDLE = (void*)0xABC;
 
 void* dlopen(const char*filename, int flag);
 void* dlopen(const char*filename, int flag) {
-  printf("dlopen(filename=%s, flag=%d)\n", nullstr(filename), flag);
+  // printf("dlopen(filename=%s, flag=%d)\n", nullstr(filename), flag);
   if (!filename)
     return SELF_HANDLE;
   return 0;
@@ -25,7 +25,7 @@ void* dlopen(const char*filename, int flag) {
 
 int dlclose(void *handle);
 int dlclose(void *handle) {
-  printf("dlclose(handle=%p)\n", handle);
+  // printf("dlclose(handle=%p)\n", handle);
   return 0;
 }
 

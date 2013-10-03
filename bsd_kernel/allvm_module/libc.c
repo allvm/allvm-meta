@@ -64,13 +64,12 @@ int isspace(int c) {
 
 char *__wrap_getenv(const char* key);
 char *__wrap_getenv(const char* key) {
-  printf("getenv(key=%s)\n", nullstr(key));
+  // printf("getenv(key=%s)\n", nullstr(key));
   return 0;
 }
 
 int gettimeofday(void *tp, void *tzp);
 int gettimeofday(void *tp, void *tzp) {
-  printf("gettimeofday() called\n");
   return -1;
 }
 

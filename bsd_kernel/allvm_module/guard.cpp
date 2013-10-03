@@ -89,7 +89,7 @@ static const guard_t INITIALISED = ((guard_t)1) << 56;
  */
 extern "C" int __cxa_guard_acquire(volatile guard_t *guard_object)
 {
-  printf("__cxa_guard_acquire(guard_object=%p)\n", guard_object);
+  // printf("__cxa_guard_acquire(guard_object=%p)\n", guard_object);
 	// Not an atomic read, doesn't establish a happens-before relationship, but
 	// if one is already established and we end up seeing an initialised state
 	// then it's a fast path, otherwise we'll do something more expensive than
@@ -147,7 +147,7 @@ extern "C" void __cxa_guard_abort(volatile guard_t *guard_object)
  */
 extern "C" void __cxa_guard_release(volatile guard_t *guard_object)
 {
-  printf("__cxa_guard_release(guard_object=%p)\n", guard_object);
+  // printf("__cxa_guard_release(guard_object=%p)\n", guard_object);
 	__attribute__((unused))
 	bool reset = __sync_bool_compare_and_swap(guard_object, LOCKED, INITIALISED);
 	assert(reset);
