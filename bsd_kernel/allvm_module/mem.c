@@ -129,7 +129,12 @@ void *mmap(void *addr, size_t len, int prot, int flags,
 int munmap(void *addr, size_t len);
 int munmap(void *addr, size_t len) {
   printf("munmap(addr=%p, len=%zu)\n", addr, len);
-  // TODO: Don't leak badly here :(
+
+  if (!addr || extract_size(addr) != len) {
+    printf("Unsupported use of munmap or bad pointer!\n");
+    return -1;
+  }
+  dealloc(addr);
   return 0;
 }
 
