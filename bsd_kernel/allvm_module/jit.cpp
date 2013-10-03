@@ -13,7 +13,6 @@
 
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/JIT.h"
-#include "llvm/ExecutionEngine/MCJIT.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/IRBuilder.h"
@@ -128,7 +127,7 @@ int testJIT(char go) {
   EngineBuilder Builder(M);
   Builder.setCodeModel(CodeModel::Kernel);
   Builder.setRelocationModel(Reloc::Static);
-  Builder.setUseMCJIT(true);
+  Builder.setUseMCJIT(false);
   ExecutionEngine* EE = Builder.create();
   printf("A5\n");
   std::vector<GenericValue> noargs;
