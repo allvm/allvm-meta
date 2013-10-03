@@ -151,10 +151,15 @@ ${FULLKERNEL}.bc.o: ${FULLKERNEL}.bc
 	@echo "***// Created ${.TARGET} with kernel bitcode"
 
 # Link all native code together as we normally would:
-${FULLKERNEL}: ${SYSTEM_DEP} vers.o
+${FULLKERNEL}: ${FULLKERNEL}.o ${FULLKERNEL}.bc.o ${SYSTEM_DEPS}
 	@rm -f ${.TARGET}
 	@echo linking ${.TARGET}
-	${SYSTEM_LD}
+	file ${SYSTEM_OBJS} vers.o|grep -v LLVM|sed 's/:.*$$//g'| \
+	xargs ld -Bdynamic -T ${LDSCRIPT} \
+		--no-warn-mismatch --warn-common \
+		-export-dynamic -dynamic-linker /red/herring \
+		-X -o ${.TARGET} \
+		${FULLKERNEL}.o ${FULLKERNEL}.bc.o
 .if ${MK_CTF} != "no"
 	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${SYSTEM_OBJS} vers.o
 .endif
