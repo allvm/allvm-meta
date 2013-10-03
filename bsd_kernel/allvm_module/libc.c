@@ -22,9 +22,12 @@ void *__stdoutp = (void*)0xCCCC0000;
 
 void __assert(const char *, const char *, int, const char *);
 void __assert(const char * function, const char * file, int line, const char *expression) {
+  // Ensure we log that assertion failed, regardless of validity of arguments.
   printf("Assertion failure!\n");
+  // Log the error explicitly so serial console gets it
   printf("Assertion failure in %s at %s:%d: \"%s\"\n", nullstr(function),
         nullstr(file), line, nullstr(expression));
+  // panic, probably duplicating message.
   panic("Assertion failure in %s at %s:%d: \"%s\"\n", nullstr(function),
         nullstr(file), line, nullstr(expression));
 }
