@@ -113,7 +113,7 @@ int testJIT(char go) {
   EE->freeMachineCodeForFunction(MainF);
   delete EE;
 
-  // XXX: Eventually be good about calling llvm_shutdown() ?
+  llvm_shutdown();
 
   return gv.IntVal.getZExtValue();
 }
