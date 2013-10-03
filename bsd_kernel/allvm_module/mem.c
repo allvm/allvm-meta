@@ -25,26 +25,43 @@ void *__real_malloc(unsigned long size, struct malloc_type *type, int flags) __m
 void *__real_realloc(void *addr, unsigned long size, struct malloc_type *type, int flags);
 void __real_free(void *addr, struct malloc_type *type);
 
+typedef struct {
+  size_t size;
+  // TODO: Add magic bytes for sanity checking?
+  char data[0];
+} mem_hdr;
+
+static const size_t hdr_offset = offsetof(mem_hdr, data);
+
+static inline mem_hdr *get_header(void *p) {
+  return (mem_hdr*)((char*)p - hdr_offset);
+}
+
+static inline size_t extract_size(void *p) {
+  return get_header(p)->size;
+}
+
 static inline void* alloc(unsigned long sz) {
-  void *ptr = __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
-  // printf("alloc(%lu) = %p\n", sz, ptr);
-  return ptr;
+  size_t new_sz = sz + hdr_offset;
+  mem_hdr *m = (mem_hdr *)__real_malloc(new_sz, allvm_mem, M_ZERO|M_NOWAIT);
+  if (!m)
+    return 0;
+  m->size = sz;
+  return &m->data[0];
 }
 
 static inline void dealloc(void *p) {
-  // printf("dealloc(%p)\n", p);
-  return __real_free(p, allvm_mem);
+  if (p)
+    __real_free(get_header(p), allvm_mem);
 }
 
-//===-- Define C operations in terms of alloc/dealloc ---------------------===//
 
-// TODO: Force LLVM/etc to use *our* malloc, not that provided by kernel!
+//===-- Define C operations in terms of alloc/dealloc ---------------------===//
 
 void *__wrap_malloc(size_t sz);
 void *__wrap_malloc(size_t sz) {
   return alloc(sz);
 }
-
 
 void *calloc(size_t nmemb, size_t size);
 void *calloc(size_t nmemb, size_t size) {
@@ -53,8 +70,23 @@ void *calloc(size_t nmemb, size_t size) {
 
 void *__wrap_realloc(void *ptr, size_t size);
 void *__wrap_realloc(void *ptr, size_t size) {
-  // Deal with it :).
-  return NULL;
+  // Allocate memory of requested size
+  void *new_ptr = alloc(size);
+  // Handle allocation failure
+  if (!new_ptr)
+    return 0;
+  // realloc(NULL, size) is the same as malloc(size)
+  if (!ptr)
+    return new_ptr;
+
+  // Otherwise, get the size of the old allocation
+  // and copy its contents to the new one.
+  size_t old_size = extract_size(ptr);
+  memcpy(new_ptr, ptr, min(old_size, size));
+
+  // Free old allocation and return new one
+  dealloc(ptr);
+  return new_ptr;
 }
 
 void __wrap_free(void *ptr);
