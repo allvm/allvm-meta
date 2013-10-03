@@ -28,7 +28,7 @@ static func_ptr __CTOR_LIST__[1]
   __attribute__ ((__unused__, section(".ctors"), aligned(sizeof(func_ptr))))
   = { (func_ptr) (-1) };
 
-static void call_ctors() {
+static void call_ctors(void) {
   printf("CTOR_LIST: %p\n", &__CTOR_LIST__);
   func_ptr *start = &__CTOR_LIST__[1];
   func_ptr *end = start;

@@ -73,6 +73,7 @@ int gettimeofday(void *tp, void *tzp) {
 
 char *getcwd(char *buf, size_t size);
 char *getcwd(char *buf, size_t size) {
+  TRACE();
   return 0;
 }
 
