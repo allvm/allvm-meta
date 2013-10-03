@@ -91,57 +91,29 @@ Function *populateTestModule(Module *M, LLVMContext &C) {
 
   return FooF;
 }
-
-void LLVMErrorHandler(void *user_data, const std::string&reason, bool gen_crash_diag) {
-  printf("LLVM FATAL ERROR: reason=%s, user_data=%p, gen_crash_diag=%d\n",
-         reason.c_str(), user_data, gen_crash_diag);
-}
-
 int testJIT(char go) {
-  ScopedFatalErrorHandler Err(LLVMErrorHandler);
-
   printf("testJIT() entry\n");
   InitializeNativeTarget();
-  //PassRegistry &Registry = *PassRegistry::getPassRegistry();
-  //                initializeCore(Registry);
-  //                initializeScalarOpts(Registry);
-  //                initializeIPO(Registry);
-  //                initializeAnalysis(Registry);
-  //                initializeIPA(Registry);
-  //                initializeTransformUtils(Registry);
-  //                initializeInstCombine(Registry);
-  //                initializeCodeGen(Registry);
-  //                initializeTarget(Registry);
 
-  printf("A1\n");
   LLVMContext Context;
 
-  printf("A2\n");
   Module *M = new Module("test", Context);
 
-  printf("A3\n");
   Function *MainF = populateTestModule(M, Context);
 
-  printf("A4\n");
   // Now we create the JIT.
   EngineBuilder Builder(M);
   Builder.setCodeModel(CodeModel::Kernel);
   Builder.setRelocationModel(Reloc::Static);
   Builder.setUseMCJIT(false);
   ExecutionEngine* EE = Builder.create();
-  printf("A5\n");
   std::vector<GenericValue> noargs;
-  printf("A6\n");
   intptr_t ptr = (intptr_t)EE->getPointerToFunction(MainF);
-//  GenericValue gv = EE->runFunction(MainF, noargs);
-  printf("A7\n");
+  GenericValue gv = EE->runFunction(MainF, noargs);
   EE->freeMachineCodeForFunction(MainF);
-  printf("A8\n");
   delete EE;
 
   // XXX: Eventually be good about calling llvm_shutdown() ?
 
-  //return gv.IntVal.getZExtValue();
-  printf("A9\n");
-  return (int)ptr;
+  return gv.IntVal.getZExtValue();
 }
