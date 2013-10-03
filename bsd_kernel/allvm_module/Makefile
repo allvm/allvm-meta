@@ -1,12 +1,11 @@
 
-.PATH: /usr/src/sys/libkern horizon-baremetal
+.PATH: /usr/src/sys/libkern
 
 LLVM_COMPONENTS := nativecodegen jit ipo mcjit
 LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
 
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
 CXXFLAGS += -fno-strict-aliasing -D__NO_TLS -DKLD_MODULE -fno-common  -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -mcmodel=kernel -mno-red-zone -mno-mmx -msoft-float  -fno-asynchronous-unwind-tables
-CXXFLAGS += -Ihorizon-baremetal
 
 CFLAGS += -Werror
 CXXFLAGS += -Werror
@@ -66,6 +65,7 @@ symcheck: missing.syms
 	@echo "Checking for undefined symbols not provided by kernel..."
 	@test ! -s ${.ALLSRC} || (cat ${.ALLSRC} && exit 1)
 	@echo "Check passed (none found)!"
+	@-rm missing.syms kern.syms kmod.undef.syms
 
 ###################################
 # Unsupported relocation checking
@@ -79,6 +79,7 @@ reloccheck: unsupported_relocs
 	@echo "Checking for unsupported relocation types..."
 	@test ! -s ${.ALLSRC} || (cat ${.ALLSRC} && exit 1)
 	@echo "Check passed (none found)!"
+	@-rm unsupported_relocs
 
 sync:
 	-mv $(HOME)/bkup.txz $(HOME)/bkup.old.txz
@@ -90,19 +91,6 @@ sync:
 
 # Refuse to try loading kernel if we still have undef symbols..
 load: symcheck reloccheck sync
-
-#############################
-# insn-swap building
-#############################
-
-INSN_LLVM_LDFLAGS != ${LLVM_CONFIG} --libs --ldflags ${LLVM_COMPONENTS} core
-INSN_LDFLAGS := ${INSN_LLVM_LDFLAGS} -ludis86
-
-insn-swap: insn-swap.cc
-	${CXX} -I/usr/local/include ${.ALLSRC} ${LLVM_CXXFLAGS} ${INSN_LDFLAGS} -o ${.TARGET}
-
-CLEANFILES += insn-swap
-
 
 #############################
 # Finalization
