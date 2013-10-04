@@ -1,4 +1,4 @@
-#include "./icxxabi.h"
+#include "icxxabi.h"
 
 #include "common.h"
 
