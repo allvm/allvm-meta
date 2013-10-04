@@ -97,3 +97,25 @@ load: symcheck reloccheck sync
 LINK_TAIL += fin.o
 CLEANFILES += fin.o
 ${FULLPROG}: fin.o
+
+#############################
+# Userspace test app
+#############################
+
+# TODO: Extract bc from running kernel,
+#       or at least /boot/kernel/kernel
+kernel.bc: /usr/obj/usr/src/sys/ALLVM/kernel.bc
+	ln -sf ${.ALLSRC} ${.TARGET}
+
+user.o: user.c
+	${CC} -I${ROOT}/include -c -o ${.TARGET} ${.ALLSRC}
+
+# Builds app *including* our fake-libc, but
+# requires a few things we rely on the kernel for
+#userapp: ${OBJS:Nmain.o} user.o
+#	${LD} ${LDFLAGS} -o ${.TARGET} ${.ALLSRC} ${LINK_TAIL}
+userapp: allvm.o user.o
+	${CXX} ${.ALLSRC} -o ${.TARGET} ${LLVM_LDFLAGS} -lm
+
+usertest: userapp
+	${.OBJDIR}/usertest kernel.bc

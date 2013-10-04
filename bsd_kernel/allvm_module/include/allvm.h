@@ -19,7 +19,7 @@ extern "C" {
 #endif
 
 // Initialize the ALLVM jit the specified bytecode
-void *createJIT(const void* bc_start, const void* bc_end, bool lazy);
+void *createJIT(const void* bc_start, const void* bc_end, char lazy);
 
 // Request a function be JIT-compiled and return pointer to it
 void *createFunction(void *JIT, const char *name);

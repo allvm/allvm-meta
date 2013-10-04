@@ -42,7 +42,7 @@ public:
   }
 };
 
-void *createJIT(const void *bc_start, const void *bc_end, bool lazy) {
+void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
   outs() << "Creating JIT for BC from " << bc_start << " to " << bc_end << "\n";
   OwningPtr<LLVMContext> C(new LLVMContext());
 

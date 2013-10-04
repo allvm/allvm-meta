@@ -46,7 +46,7 @@ static int jit_loader(struct module *m, int what, void *arg) {
 
     cxx_init();
 
-    jit_handle = createJIT(&bckernel_begin, &bckernel_end, true);
+    jit_handle = createJIT(&bckernel_begin, &bckernel_end, 1);
     if (jit_handle) {
       printf("Successfully initialized ALLVM-JIT with kernel.bc\n");
       printf("ALLVM-JIT KLD loaded and initialized.\n");
