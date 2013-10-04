@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "llvm/ADT/OwningPtr.h"
+#include "llvm/Bitcode/ReaderWriter.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/JIT.h"
 #include "llvm/IR/Constants.h"
@@ -21,56 +22,64 @@
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/ManagedStatic.h"
+#include "llvm/Support/MemoryBuffer.h"
+#include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/TargetSelect.h"
 
 #include "allvm.h"
 
-class JITContext {
-  LLVMContext *Context;
-  Module *M;
-  ExecutionEngine *EE;
+using namespace llvm;
 
+class JITContext {
+  OwningPtr<LLVMContext> Context;
+  Module *M;
+  OwningPtr<ExecutionEngine> EE;
+public:
   JITContext(LLVMContext *Context, Module *M, ExecutionEngine *EE)
     : Context(Context), M(M), EE(EE) {}
-public:
-  JITContext *createWithBC(ArrayRef<const char*> BC) {
-    OwningPtr<LLVMContext> C(new LLVMContext());
-
-    // If error, return null
-
-
-    return new JITContext(C.take(), M, EE);
-  }
-  initWith(Module *M) {
-    this->M = M;
-    EngineBuilder Builder(M);
-    Builder.setCodeModel(CodeModel::Kernel);
-    Builder.setRelocationModel(Reloc::Static);
-    Builder.setUseMCJIT(false);
-
-    EE = Builder.create();
-    assert(EE);
-  }
-
   ~JITContext() {
     // EE->freeMachineCodeForFunction(...);
-    delete EE;
-
   }
 };
 
 void *createJIT(const void *bc_start, const void *bc_end) {
-  JITContext *JC = new JITContext(bc_start, bc_end);
-  if (!JC->init()) {
-    delete JC;
-    return 0;
+  OwningPtr<LLVMContext> C(new LLVMContext());
+
+  const char *start = (const char *)bc_start, *end = (const char *)bc_end;
+  OwningPtr<MemoryBuffer> BCBuffer(
+    MemoryBuffer::getMemBuffer(StringRef(start, end-start), "bckernel", false));
+  if (!BCBuffer) {
+    errs() << "Failed to construct memory buffer\n";
+    return NULL;
   }
-  return JC;
+
+
+  std::string ErrMsg;
+  Module *M = ParseBitcodeFile(BCBuffer.get(), *C, &ErrMsg);
+  if (!M) {
+    errs() << "Error parsing bitcode: " << ErrMsg << "\n";
+    return NULL;
+  }
+  EngineBuilder Builder(M);
+  Builder.setCodeModel(CodeModel::Kernel);
+  Builder.setRelocationModel(Reloc::Static);
+  Builder.setUseMCJIT(false);
+  Builder.setErrorStr(&ErrMsg);
+
+  ExecutionEngine *EE = Builder.create();
+  if (!EE) {
+    errs() << "Error creating execution engine: " << ErrMsg << "\n";
+    return NULL;
+  }
+
+  return new JITContext(C.take(), M, EE);
 }
 
 void *createFunction(void *JIT, const char *name) {
   assert(JIT);
   JITContext *JC = static_cast<JITContext *>(JIT);
+
+  return NULL;
 }
 
 void destroyJIT(void *JIT) {
@@ -78,10 +87,10 @@ void destroyJIT(void *JIT) {
   delete static_cast<JITContext *>(JIT);
 }
 
-void init() __attribute__((constructor)) {
+static void __attribute__((constructor)) init() {
   InitializeNativeTarget();
 }
 
-void fini() __attribute__((destructor)) {
+static void __attribute__((destructor)) fini() {
   llvm_shutdown();
 }

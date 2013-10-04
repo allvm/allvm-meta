@@ -24,7 +24,7 @@ LINK_TAIL += -wrap getenv -wrap memcpy
 LINK_TAIL += -wrap printf -wrap vprintf
 
 SRCS := main.c
-SRCS += jit.cpp
+SRCS += allvm.cpp
 
 SRCS += guard.cpp icxxabi.cpp
 SRCS += mem.c memcpy.c
