@@ -42,7 +42,8 @@ public:
   }
 };
 
-void *createJIT(const void *bc_start, const void *bc_end) {
+void *createJIT(const void *bc_start, const void *bc_end, bool lazy) {
+  outs() << "Creating JIT for BC from " << bc_start << " to " << bc_end << "\n";
   OwningPtr<LLVMContext> C(new LLVMContext());
 
   const char *start = (const char *)bc_start, *end = (const char *)bc_end;
@@ -55,11 +56,19 @@ void *createJIT(const void *bc_start, const void *bc_end) {
 
 
   std::string ErrMsg;
-  Module *M = ParseBitcodeFile(BCBuffer.get(), *C, &ErrMsg);
-  if (!M) {
+  Module *M;
+  if (lazy) {
+    outs() << "Creating lazily parsed module...\n";
+    M = getLazyBitcodeModule(&*BCBuffer, *C, &ErrMsg);
+  } else {
     errs() << "Error parsing bitcode: " << ErrMsg << "\n";
+    M = ParseBitcodeFile(&*BCBuffer, *C, &ErrMsg);
+  }
+  if (!M) {
     return NULL;
   }
+
+  outs() << "Constructing execution engine...\n";
   EngineBuilder Builder(M);
   Builder.setCodeModel(CodeModel::Kernel);
   Builder.setRelocationModel(Reloc::Static);
