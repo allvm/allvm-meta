@@ -99,7 +99,6 @@ UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
-UNSUPPORTED(atoi);
 UNSUPPORTED(clearerr);
 UNSUPPORTED(clock_gettime);
 UNSUPPORTED(close);
