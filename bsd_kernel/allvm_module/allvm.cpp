@@ -11,6 +11,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "llvm/ADT/OwningPtr.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
 #include "llvm/ExecutionEngine/JIT.h"
 #include "llvm/IR/Constants.h"
@@ -25,12 +26,21 @@
 #include "allvm.h"
 
 class JITContext {
-  LLVMContext Context;
+  LLVMContext *Context;
   Module *M;
   ExecutionEngine *EE;
-public:
-  JITContext() : M(0), EE(0) {}
 
+  JITContext(LLVMContext *Context, Module *M, ExecutionEngine *EE)
+    : Context(Context), M(M), EE(EE) {}
+public:
+  JITContext *createWithBC(ArrayRef<const char*> BC) {
+    OwningPtr<LLVMContext> C(new LLVMContext());
+
+    // If error, return null
+
+
+    return new JITContext(C.take(), M, EE);
+  }
   initWith(Module *M) {
     this->M = M;
     EngineBuilder Builder(M);
@@ -50,10 +60,12 @@ public:
 };
 
 void *createJIT(const void *bc_start, const void *bc_end) {
-  JITContext *JC = new JITContext(M);
+  JITContext *JC = new JITContext(bc_start, bc_end);
+  if (!JC->init()) {
+    delete JC;
+    return 0;
+  }
   return JC;
-
-  return new JITContext(M);
 }
 
 void *createFunction(void *JIT, const char *name) {
