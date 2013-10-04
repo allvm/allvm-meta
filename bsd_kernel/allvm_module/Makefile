@@ -1,7 +1,7 @@
 
 .PATH: /usr/src/sys/libkern
 
-LLVM_COMPONENTS := nativecodegen jit ipo mcjit
+LLVM_COMPONENTS := nativecodegen jit ipo mcjit bitreader
 LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
 
 CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
