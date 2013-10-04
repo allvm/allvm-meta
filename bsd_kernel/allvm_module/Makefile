@@ -102,9 +102,11 @@ ${FULLPROG}: fin.o
 # Userspace test app
 #############################
 
-# TODO: Extract bc from running kernel,
-#       or at least /boot/kernel/kernel
-kernel.bc: /usr/obj/usr/src/sys/ALLVM/kernel.bc
+# TODO: Extract bc from running kernel (/dev/kmem)
+#       or from final /boot/kernel/kernel.
+# For now hijack build artifact
+
+kernel.bc.o: /usr/obj/usr/src/sys/ALLVM/kernel.bc.o
 	ln -sf ${.ALLSRC} ${.TARGET}
 
 user.o: user.c
@@ -114,8 +116,10 @@ user.o: user.c
 # requires a few things we rely on the kernel for
 #userapp: ${OBJS:Nmain.o} user.o
 #	${LD} ${LDFLAGS} -o ${.TARGET} ${.ALLSRC} ${LINK_TAIL}
-userapp: allvm.o user.o
-	${CXX} ${.ALLSRC} -o ${.TARGET} ${LLVM_LDFLAGS} -lm
+userapp: allvm.o user.o kernel.bc.o
+	${CXX} -static ${.ALLSRC} -o ${.TARGET} ${LLVM_LDFLAGS} -lm -O2
 
 usertest: userapp
 	${.OBJDIR}/usertest kernel.bc
+
+CLEANFILES += userapp user.o kernel.bc kernel.bc.o
