@@ -58,13 +58,14 @@ void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
   std::string ErrMsg;
   Module *M;
   if (lazy) {
-    outs() << "Creating lazily parsed module...\n";
+    outs() << "Creating lazily-parsed module...\n";
     M = getLazyBitcodeModule(&*BCBuffer, *C, &ErrMsg);
   } else {
-    errs() << "Error parsing bitcode: " << ErrMsg << "\n";
+    outs() << "Creating eagerly-parsed module...\n";
     M = ParseBitcodeFile(&*BCBuffer, *C, &ErrMsg);
   }
   if (!M) {
+    errs() << "Error parsing bitcode: " << ErrMsg << "\n";
     return NULL;
   }
 
