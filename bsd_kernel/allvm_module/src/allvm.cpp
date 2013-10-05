@@ -70,6 +70,10 @@ void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
     return NULL;
   }
 
+  errs() << "ModuleID: " << M->getModuleIdentifier() << "\n";
+  errs() << "Triple: " << M->getTargetTriple() << "\n";
+  errs() << "DataLayout: " << M->getDataLayout() << "\n";
+
   outs() << "Constructing execution engine...\n";
   EngineBuilder Builder(M);
   Builder.setCodeModel(CodeModel::Kernel);
