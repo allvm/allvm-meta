@@ -60,6 +60,7 @@ void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
   if (lazy) {
     outs() << "Creating lazily-parsed module...\n";
     M = getLazyBitcodeModule(&*BCBuffer, *C, &ErrMsg);
+    if (M) BCBuffer.take();
   } else {
     outs() << "Creating eagerly-parsed module...\n";
     M = ParseBitcodeFile(&*BCBuffer, *C, &ErrMsg);
@@ -76,13 +77,13 @@ void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
   Builder.setUseMCJIT(false);
   Builder.setErrorStr(&ErrMsg);
 
-  ExecutionEngine *EE = Builder.create();
+  OwningPtr<ExecutionEngine> EE(Builder.create());
   if (!EE) {
     errs() << "Error creating execution engine: " << ErrMsg << "\n";
     return NULL;
   }
 
-  return new JITContext(C.take(), M, EE);
+  return new JITContext(C.take(), M, EE.take());
 }
 
 void *createFunction(void *JIT, const char *name) {
@@ -102,5 +103,6 @@ static void __attribute__((constructor)) init() {
 }
 
 static void __attribute__((destructor)) fini() {
+  errs() << "fini...\n";
   llvm_shutdown();
 }

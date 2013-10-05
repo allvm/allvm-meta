@@ -58,10 +58,10 @@ static int jit_loader(struct module *m, int what, void *arg) {
   case MOD_UNLOAD:
     printf("ALLVM-JIT unloaded.\n");
 
-    cxx_fini();
-
     if (jit_handle)
       destroyJIT(jit_handle);
+
+    cxx_fini();
 
     break;
   default:
