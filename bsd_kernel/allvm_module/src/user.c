@@ -27,8 +27,10 @@ static const char *start = &_binary_kernel_bc_start;
 static const char *end = &_binary_kernel_bc_end;
 
 int main(int argc, char **argv) {
-  void *jit_handle = createJIT(start, end, 0);
+  void *jit_handle = createJIT(start, end, 1);
   printf("jit_handle: %p\n", jit_handle);
 
+  if (jit_handle)
+    destroyJIT(jit_handle);
   return 0;
 }
