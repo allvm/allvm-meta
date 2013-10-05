@@ -21,14 +21,5 @@
 *.syms
 
 # Hardcoded files I don't want to be bothered about
-bsd_kernel/allvm_module/@
-bsd_kernel/allvm_module/export_syms
-bsd_kernel/allvm_module/machine
-bsd_kernel/allvm_module/unsupported_relocs
-bsd_kernel/allvm_module/x86
-bsd_kernel/allvm_module/obj/@
-bsd_kernel/allvm_module/obj/export_syms
-bsd_kernel/allvm_module/obj/machine
-bsd_kernel/allvm_module/obj/unsupported_relocs
-bsd_kernel/allvm_module/obj/x86
+bsd_kernel/allvm_module/obj/*
 
