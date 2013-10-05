@@ -103,6 +103,5 @@ static void __attribute__((constructor)) init() {
 }
 
 static void __attribute__((destructor)) fini() {
-  errs() << "fini...\n";
   llvm_shutdown();
 }
