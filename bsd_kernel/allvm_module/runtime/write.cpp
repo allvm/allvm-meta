@@ -14,6 +14,7 @@
 #include "common.h"
 
 #include <algorithm>
+#include <cstring>
 #include <vector>
 
 static std::vector<char> buffer;
