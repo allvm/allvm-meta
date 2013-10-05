@@ -17,7 +17,8 @@
 #include <cstring>
 #include <vector>
 
-static std::vector<char> buffer;
+static std::vector<char> stdout_buffer;
+static std::vector<char> stderr_buffer;
 
 extern "C" int __real_printf(const char *, ...) __printflike(1, 2);
 
@@ -39,13 +40,16 @@ ssize_t write(int fd, const void *buf, size_t count) {
   if (fd != 1 && fd != 2)
     return -1;
 
+  std::vector<char> & buffer = (fd == 1) ? stdout_buffer : stderr_buffer;
+  const char *prefix = (fd == 1) ? "[ALLVM-STDOUT] " : "[ALLVM-STDERR] ";
+
   // Insert into buffer
   const char *start = (const char*)buf, *end = start + count;
   while (start != end) {
     const char * newline = std::find(start, end, '\n');
     if (newline != end) {
       // Write prefix
-      __real_printf("[ALLVM-IO] ");
+      __real_printf(prefix);
 
       // Print buffered contents
       std::for_each(buffer.begin(), buffer.end(), print_char);
