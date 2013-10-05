@@ -5,8 +5,8 @@ ROOT = ${.CURDIR}
 LLVM_COMPONENTS := nativecodegen jit ipo mcjit bitreader
 LLVM_CONFIG=/home/will/llvm/slim/bin/llvm-config
 
-CXXFLAGS := -O2 -pipe -fno-rtti -fno-exceptions
-CXXFLAGS += -fno-strict-aliasing -D__NO_TLS -DKLD_MODULE -fno-common  -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -mcmodel=kernel -mno-red-zone -mno-mmx -msoft-float  -fno-asynchronous-unwind-tables
+CXXFLAGS := -Os -pipe -fno-rtti -fno-exceptions
+CXXFLAGS += -Os -fno-strict-aliasing -D__NO_TLS -DKLD_MODULE -fno-common  -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -mcmodel=kernel -mno-red-zone -mno-mmx -msoft-float  -fno-asynchronous-unwind-tables
 
 CFLAGS += -Werror -I${ROOT}/include
 CXXFLAGS += -Werror -I${ROOT}/include
