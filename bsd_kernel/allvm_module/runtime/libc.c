@@ -13,7 +13,11 @@
 
 #include "common.h"
 
-void *__error = 0;
+static int errno = 0;
+int *__error(void);
+int *__error(void) {
+  return &errno;
+}
 
 // TODO: Almost certainly terrible
 void *__stdinp = (void*)0xAAAA0000;
@@ -86,7 +90,13 @@ void perror(const char *s) {
 
 off_t lseek(int fd, off_t offset, int whence);
 off_t lseek(int fd, off_t offset, int whence) {
-  TRACE();
+  printf("lseek(fd=%d, offset=%zd, whence=%d)\n", fd, offset, whence);
+  return -1;
+}
+
+int fstat(int fd, void* buf);
+int fstat(int fd, void* buf) {
+  printf("fstat(fd=%d, ...)\n", fd);
   return -1;
 }
 
@@ -128,7 +138,6 @@ UNSUPPORTED(fprintf);
 UNSUPPORTED(fputc);
 UNSUPPORTED(fread);
 UNSUPPORTED(fseek);
-UNSUPPORTED(fstat);
 UNSUPPORTED(ftell);
 UNSUPPORTED(ftruncate);
 UNSUPPORTED(futimes);
