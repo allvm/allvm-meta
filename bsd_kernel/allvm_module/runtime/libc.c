@@ -95,13 +95,20 @@ void abort(void) {
   panic("[ALLVM] ABORT CALLED!\n");
 }
 
+int close(int fd);
+int close(int fd) {
+  if (fd >= 0 && fd <= 2)
+    return 0;
+  printf("close(fd=%d) called\n", fd);
+  return -1;
+}
+
 UNSUPPORTED(__xuname);
 UNSUPPORTED(_exit);
 UNSUPPORTED(access);
 UNSUPPORTED(alarm);
 UNSUPPORTED(clearerr);
 UNSUPPORTED(clock_gettime);
-UNSUPPORTED(close);
 UNSUPPORTED(closedir);
 UNSUPPORTED(dup2);
 UNSUPPORTED(environ);
