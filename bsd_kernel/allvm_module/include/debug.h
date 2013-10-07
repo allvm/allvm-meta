@@ -16,7 +16,17 @@
 #include "common.h"
 
 #ifndef NDEBUG
+
+START_DECLS
+
+// Controls debugging, defaults to false
 extern char __DebugEnabled;
+
+static inline void setDebug(char enable) {
+  __DebugEnabled = enable;
+}
+
+END_DECLS
 
 #define DEBUG(X) \
   do { \
@@ -29,8 +39,10 @@ extern char __DebugEnabled;
 
 #endif // ENABLE_DEBUG
 
-#define TRACE() DEBUG(printf("<TRACE> Call to '%s'\n", __FUNCTION))
+#ifdef TRACE
+#undef TRACE
+#endif
 
-#endif // _DEBUG_H_
+#define TRACE() DEBUG(printf("<TRACE> Call to '%s'\n", __FUNCTION__))
 
 

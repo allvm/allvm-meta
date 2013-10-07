@@ -15,17 +15,15 @@
 #ifndef _ASSERT_H_
 #define _ASSERT_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "common.h"
+
+START_DECLS
 
 void __assert(const char *, const char *, int, const char *) __dead2;
 
 #define assert(e) \
   ((e) ? (void)0 : __assert(__func__, __FILE__, __LINE__, #e))
 
-#ifdef __cplusplus
-}
-#endif
+END_DECLS
 
 #endif // _ASSERT_H_
