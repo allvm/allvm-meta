@@ -67,6 +67,16 @@ int isspace(int c) {
          c == '\t' || c == '\v';
 }
 
+int isprint(int c);
+int isprint(int c) {
+  // For the standard ASCII character set (used by the "C" locale), printing
+  // characters are all with an ASCII code greater than 0x1f (US), except 0x7f
+  // (DEL).
+  // (from http://www.cplusplus.com/reference/cctype/isprint/)
+
+  return (c != 0x7f) && (c >= 0x1f) && (c <= 0xff);
+}
+
 char *__wrap_getenv(const char* key);
 char *__wrap_getenv(const char* key) {
   DEBUG(printf("getenv(key=%s)\n", nullstr(key)));
@@ -150,7 +160,6 @@ UNSUPPORTED(getrlimit);
 UNSUPPORTED(getrusage);
 UNSUPPORTED(ioctl);
 UNSUPPORTED(isatty);
-UNSUPPORTED(isprint);
 UNSUPPORTED(kill);
 UNSUPPORTED(link);
 UNSUPPORTED(localtime_r);
