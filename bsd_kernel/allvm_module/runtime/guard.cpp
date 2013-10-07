@@ -41,10 +41,9 @@
  * initialised.  
  */
 #include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 #include "atomic.h"
+#include "debug.h"
 
 // Older GCC doesn't define __LITTLE_ENDIAN__
 #ifndef __LITTLE_ENDIAN__
@@ -89,7 +88,7 @@ static const guard_t INITIALISED = ((guard_t)1) << 56;
  */
 extern "C" int __cxa_guard_acquire(volatile guard_t *guard_object)
 {
-  // printf("__cxa_guard_acquire(guard_object=%p)\n", guard_object);
+  DEBUG(printf("__cxa_guard_acquire(guard_object=%p)\n", guard_object));
 	// Not an atomic read, doesn't establish a happens-before relationship, but
 	// if one is already established and we end up seeing an initialised state
 	// then it's a fast path, otherwise we'll do something more expensive than
@@ -116,14 +115,14 @@ extern "C" int __cxa_guard_acquire(volatile guard_t *guard_object)
 			case LOCKED:
 			case LOCKED | INITIALISED:
 				printf("No multithreaded support, how is this locked??\n");
-				abort();
+				panic("No multithreaded support, how is this locked??\n");
 				// sched_yield();
 				break;
 			// If it is some other value, then something has gone badly wrong.
 			// Give up.
 			default:
 				printf("Invalid state detected attempting to lock static initialiser.\n");
-				abort();
+				panic("Invalid state detected attempting to lock static initialiser.\n");
 		}
 	}
 	//__builtin_unreachable();
@@ -147,7 +146,7 @@ extern "C" void __cxa_guard_abort(volatile guard_t *guard_object)
  */
 extern "C" void __cxa_guard_release(volatile guard_t *guard_object)
 {
-  // printf("__cxa_guard_release(guard_object=%p)\n", guard_object);
+  DEBUG(printf("__cxa_guard_release(guard_object=%p)\n", guard_object));
 	__attribute__((unused))
 	bool reset = __sync_bool_compare_and_swap(guard_object, LOCKED, INITIALISED);
 	assert(reset);
