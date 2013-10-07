@@ -26,8 +26,8 @@ static char buf[FORMAT_LEN];
 static const char* prefix = "[ALLVM] ";
 
 static const char* add_prefix(const char *fmt) {
-  if ((strlcpy(buf, prefix, FORMAT_LEN) > FORMAT_LEN) ||
-      (strlcat(buf, fmt, FORMAT_LEN) > FORMAT_LEN)) {
+  if ((strlcpy(buf, prefix, FORMAT_LEN) >= FORMAT_LEN) ||
+      (strlcat(buf, fmt, FORMAT_LEN) >= FORMAT_LEN)) {
     __real_printf("[ALLVM] Format specifier overflow! :(\n");
     return 0;
   }
