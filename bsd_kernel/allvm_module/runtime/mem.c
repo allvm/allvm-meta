@@ -25,36 +25,17 @@ void *__real_malloc(unsigned long size, struct malloc_type *type, int flags) __m
 void *__real_realloc(void *addr, unsigned long size, struct malloc_type *type, int flags);
 void __real_free(void *addr, struct malloc_type *type);
 
-typedef struct {
-  size_t size;
-  // TODO: Add magic bytes for sanity checking?
-  char data[0];
-} mem_hdr;
-
-static const size_t hdr_offset = offsetof(mem_hdr, data);
-
-static inline mem_hdr *get_header(void *p) {
-  return (mem_hdr*)((char*)p - hdr_offset);
-}
-
-static inline size_t extract_size(void *p) {
-  return get_header(p)->size;
-}
-
 static inline void* alloc(unsigned long sz) {
-  size_t new_sz = sz + hdr_offset;
-  mem_hdr *m = (mem_hdr *)__real_malloc(new_sz, allvm_mem, M_ZERO|M_NOWAIT);
-  if (!m)
-    return 0;
-  m->size = sz;
-  return &m->data[0];
+  return __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
 }
 
 static inline void dealloc(void *p) {
-  if (p)
-    __real_free(get_header(p), allvm_mem);
+  __real_free(p, allvm_mem);
 }
 
+static inline void *resizealloc(void *addr, unsigned long size) {
+  return __real_realloc(addr, size, allvm_mem, M_ZERO|M_NOWAIT);
+}
 
 //===-- Define C operations in terms of alloc/dealloc ---------------------===//
 
@@ -70,23 +51,7 @@ void *calloc(size_t nmemb, size_t size) {
 
 void *__wrap_realloc(void *ptr, size_t size);
 void *__wrap_realloc(void *ptr, size_t size) {
-  // Allocate memory of requested size
-  void *new_ptr = alloc(size);
-  // Handle allocation failure
-  if (!new_ptr)
-    return 0;
-  // realloc(NULL, size) is the same as malloc(size)
-  if (!ptr)
-    return new_ptr;
-
-  // Otherwise, get the size of the old allocation
-  // and copy its contents to the new one.
-  size_t old_size = extract_size(ptr);
-  memcpy(new_ptr, ptr, min(old_size, size));
-
-  // Free old allocation and return new one
-  dealloc(ptr);
-  return new_ptr;
+  return resizealloc(ptr, size);
 }
 
 void __wrap_free(void *ptr);
@@ -130,12 +95,7 @@ void *mmap(void *addr, size_t len, int prot, int flags,
 
 int munmap(void *addr, size_t len);
 int munmap(void *addr, size_t len) {
-  // printf("munmap(addr=%p, len=%zu)\n", addr, len);
-
-  if (!addr || extract_size(addr) != len) {
-    printf("Unsupported use of munmap or bad pointer!\n");
-    return -1;
-  }
+  printf("munmap(addr=%p, len=%zu)\n", addr, len);
   dealloc(addr);
   return 0;
 }
