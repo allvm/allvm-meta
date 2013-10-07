@@ -16,6 +16,9 @@
 #include <sys/malloc.h>
 #include <sys/systm.h>
 
+#include "assert.h"
+
+
 //===-- Primary Allocation ------------------------------------------------===//
 
 MALLOC_DECLARE(allvm_mem);
@@ -26,7 +29,10 @@ void *__real_realloc(void *addr, unsigned long size, struct malloc_type *type, i
 void __real_free(void *addr, struct malloc_type *type);
 
 static inline void* alloc(unsigned long sz) {
-  return __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
+  void *p = __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
+  assert(p && "Allocation failed");
+  assert((((uintptr_t)p & 0x3) == 0) && "Insufficient pointer alignment");
+  return p;
 }
 
 static inline void dealloc(void *p) {
