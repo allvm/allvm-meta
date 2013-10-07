@@ -23,12 +23,13 @@ LINK_TAIL := -static ${LLVM_LDFLAGS} ${LIBCXX} /usr/lib/libm.a
 LINK_TAIL += -wrap malloc -wrap realloc -wrap free
 LINK_TAIL += -wrap getenv -wrap memcpy
 LINK_TAIL += -wrap printf -wrap vprintf
+LINK_TAIL += -wrap bcopy -wrap bzero
 
 SRCS := main.c
 SRCS += allvm.cpp
 
 SRCS += guard.cpp icxxabi.cpp
-SRCS += mem.c memcpy.c
+SRCS += mem.c memcpy.c bsd.c
 SRCS += abs.c atoi.c dl.c libc.c gcc.c printf.c signal.c strchr.c
 SRCS += write.cpp
 SRCS += debug.cpp
