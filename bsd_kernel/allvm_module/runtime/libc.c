@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "common.h"
+#include "debug.h"
 
 static int errno = 0;
 int *__error(void);
@@ -68,12 +69,13 @@ int isspace(int c) {
 
 char *__wrap_getenv(const char* key);
 char *__wrap_getenv(const char* key) {
-  // printf("getenv(key=%s)\n", nullstr(key));
+  DEBUG(printf("getenv(key=%s)\n", nullstr(key)));
   return 0;
 }
 
 int gettimeofday(void *tp, void *tzp);
 int gettimeofday(void *tp, void *tzp) {
+  TRACE();
   return -1;
 }
 
@@ -85,31 +87,32 @@ char *getcwd(char *buf, size_t size) {
 
 void perror(const char *s);
 void perror(const char *s) {
-  printf("perror(s=%s)\n", nullstr(s));
+  DEBUG(printf("perror(s=%s)\n", nullstr(s)));
 }
 
 off_t lseek(int fd, off_t offset, int whence);
 off_t lseek(int fd, off_t offset, int whence) {
-  printf("lseek(fd=%d, offset=%zd, whence=%d)\n", fd, offset, whence);
+  DEBUG(printf("lseek(fd=%d, offset=%zd, whence=%d)\n", fd, offset, whence));
   return -1;
 }
 
 int fstat(int fd, void* buf);
 int fstat(int fd, void* buf) {
-  printf("fstat(fd=%d, ...)\n", fd);
+  DEBUG(printf("fstat(fd=%d, ...)\n", fd));
   return -1;
 }
 
 void abort(void);
 void abort(void) {
+  TRACE();
   panic("[ALLVM] ABORT CALLED!\n");
 }
 
 int close(int fd);
 int close(int fd) {
+  DEBUG(printf("close(fd=%d) called\n", fd));
   if (fd >= 0 && fd <= 2)
     return 0;
-  printf("close(fd=%d) called\n", fd);
   return -1;
 }
 

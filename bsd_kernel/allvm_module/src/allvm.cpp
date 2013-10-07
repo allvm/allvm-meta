@@ -11,6 +11,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/OwningPtr.h"
 #include "llvm/Bitcode/ReaderWriter.h"
 #include "llvm/ExecutionEngine/GenericValue.h"
@@ -47,6 +48,7 @@ void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
   OwningPtr<LLVMContext> C(new LLVMContext());
 
   const char *start = (const char *)bc_start, *end = (const char *)bc_end;
+
   OwningPtr<MemoryBuffer> BCBuffer(
     MemoryBuffer::getMemBuffer(StringRef(start, end-start), "bckernel", false));
   if (!BCBuffer) {
@@ -73,6 +75,7 @@ void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
   errs() << "ModuleID: " << M->getModuleIdentifier() << "\n";
   errs() << "Triple: " << M->getTargetTriple() << "\n";
   errs() << "DataLayout: " << M->getDataLayout() << "\n";
+
 
   outs() << "Constructing execution engine...\n";
   EngineBuilder Builder(M);

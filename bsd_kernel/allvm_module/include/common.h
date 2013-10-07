@@ -28,14 +28,9 @@ static inline const char* nullstr(const char *str) {
   return str ? str : "<null>";
 }
 
-//#define BAIL() panic("Unsupported call to '%s'!\n", __FUNCTION__)
-#define BAIL() printf("Unsupported call to '%s'!\n", __FUNCTION__)
-
 #define UNSUPPORTED(name) \
   void name(void); \
-  void name() { BAIL(); }
-
-#define TRACE() printf("<TRACE> Call to '%s'\n", __FUNCTION__)
+  void name() { printf("Unsupported call to '%s'!\n", __FUNCTION__); }
 
 #ifdef __cplusplus
 }

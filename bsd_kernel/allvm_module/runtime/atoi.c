@@ -11,10 +11,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include "debug.h"
+
 long int strtol(const char *nptr, char **endptr, int base);
 
 int atoi(const char *nptr);
 int atoi(const char *nptr) {
+  DEBUG(printf("atoi(str=%s)\n", nptr));
   return strtol(nptr, 0, 10);
 }
 

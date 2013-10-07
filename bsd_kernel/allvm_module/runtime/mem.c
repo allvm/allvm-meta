@@ -17,6 +17,7 @@
 #include <sys/systm.h>
 
 #include "assert.h"
+#include "debug.h"
 
 
 //===-- Primary Allocation ------------------------------------------------===//
@@ -32,15 +33,19 @@ static inline void* alloc(unsigned long sz) {
   void *p = __real_malloc(sz, allvm_mem, M_ZERO|M_NOWAIT);
   assert(p && "Allocation failed");
   assert((((uintptr_t)p & 0x3) == 0) && "Insufficient pointer alignment");
+  DEBUG(printf("alloc(sz=%zu) -> %p\n", sz, p));
   return p;
 }
 
 static inline void dealloc(void *p) {
+  DEBUG(printf("dealloc(p=%p)\n", p));
   __real_free(p, allvm_mem);
 }
 
 static inline void *resizealloc(void *addr, unsigned long size) {
-  return __real_realloc(addr, size, allvm_mem, M_ZERO|M_NOWAIT);
+  void *p = __real_realloc(addr, size, allvm_mem, M_ZERO|M_NOWAIT);
+  DEBUG(printf("realloc(addr=%p, size=%zu) -> %p\n", addr, size, p));
+  return p;
 }
 
 //===-- Define C operations in terms of alloc/dealloc ---------------------===//
@@ -79,29 +84,28 @@ void *mmap(void *addr, size_t len, int prot, int flags,
   // From sys/mman.h:
   void *MAP_FAILED = (void*)-1;
   unsigned MAP_ANONYMOUS = 0x1000;
+  DEBUG(
+    printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
+         addr, len, prot, flags, fildes, off));
 
   if ((len & (getpagesize() - 1)) != 0) {
-    printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
-           addr, len, prot, flags, fildes, off);
-    printf("  \\-> Invalid len to mmap: %zu\n", len);
+    DEBUG(printf("  \\-> Invalid len to mmap: %zu\n", len));
     return MAP_FAILED;
   }
   if (!(flags & MAP_ANONYMOUS)) {
-    printf("mmap(addr=%p, len=%zu, prot=%d, flags=%d, fildes=%d, off=%zu)\n",
-           addr, len, prot, flags, fildes, off);
-    printf("  \\-> Only anonymous mapping supported\n");
+    DEBUG(printf("  \\-> Only anonymous mapping supported\n"));
     return MAP_FAILED;
   }
 
   //  (current allocator already fills with zero)
   void * ptr = alloc(len);
-  // printf(" \\-> ptr: %p\n", ptr);
+  DEBUG(printf(" \\-> ptr: %p\n", ptr));
   return ptr;
 }
 
 int munmap(void *addr, size_t len);
 int munmap(void *addr, size_t len) {
-  printf("munmap(addr=%p, len=%zu)\n", addr, len);
+  DEBUG(printf("munmap(addr=%p, len=%zu)\n", addr, len));
   dealloc(addr);
   return 0;
 }

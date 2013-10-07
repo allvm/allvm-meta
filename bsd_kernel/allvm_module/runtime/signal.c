@@ -12,23 +12,28 @@
 //===----------------------------------------------------------------------===//
 
 #include "common.h"
+#include "debug.h"
 
 int sigaction(void);
 int sigaction(void) {
+  TRACE();
   return -1;
 }
 
 int sigemptyset(void);
 int sigemptyset(void) {
+  TRACE();
   return -1;
 }
 
 int sigfillset(void);
 int sigfillset(void) {
+  TRACE();
   return -1;
 }
 
 int sigprocmask(void);
 int sigprocmask(void) {
+  TRACE();
   return -1;
 }

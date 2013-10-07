@@ -12,6 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "common.h"
+#include "debug.h"
 
 void __register_frame(void *);
 void __deregister_frame(void*);
