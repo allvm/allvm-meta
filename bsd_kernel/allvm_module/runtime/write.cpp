@@ -22,7 +22,7 @@ static std::vector<char> stderr_buffer;
 
 extern "C" int __real_printf(const char *, ...) __printflike(1, 2);
 
-void print_char(char c) {
+static void print_char(char c) {
   __real_printf("%c", c);
 }
 
@@ -37,6 +37,8 @@ static void __attribute__((destructor)) flush() {
 
 template <typename It>
 void print(It start, It end) {
+  if (start == end) return;
+
   // If no null bytes, print as single string
   if (std::find(start, end, 0) == end) {
     std::vector<char> temp(start, end);
