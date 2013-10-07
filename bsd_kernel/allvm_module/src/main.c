@@ -17,6 +17,9 @@
 #include <sys/errno.h>
 #include <sys/param.h>  /* defines used in kernel.h */
 #include <sys/kernel.h> /* types used in module initialization */
+#include <sys/proc.h> // curthread
+
+#include <machine/fpu.h>
 
 #include "icxxabi.h"
 #include "begin.h"
@@ -32,6 +35,20 @@ static void cxx_fini(void) {
     call_dtors();
 }
 
+static struct fpu_kern_ctx *fpu_ctx_save = 0;
+static void fpu_init(void) {
+  fpu_ctx_save = fpu_kern_alloc_ctx(FPU_KERN_NORMAL);
+}
+static void fpu_save(void) {
+  fpu_kern_enter(curthread, fpu_ctx_save, FPU_KERN_NORMAL);
+}
+static void fpu_restore(void) {
+  fpu_kern_leave(curthread, fpu_ctx_save);
+}
+static void fpu_deinit(void) {
+  fpu_kern_free_ctx(fpu_ctx_save);
+}
+
 static void* jit_handle = 0;
 
 extern char bckernel_begin;
@@ -39,9 +56,13 @@ extern char bckernel_end;
 
 // Handler invoked by kernel when module is loaded/unloaded
 static int jit_loader(struct module *m, int what, void *arg) {
+
   int err = 0;
   switch (what) {
   case MOD_LOAD: /* kldload */
+    fpu_init();
+    fpu_save();
+
     printf("Initializing ALLVM-JIT KLD...\n");
 
     cxx_init();
@@ -54,14 +75,18 @@ static int jit_loader(struct module *m, int what, void *arg) {
       printf("Failed to initialized ALLVM-JIT.\n");
       // TODO: Set 'err' appropriately
     }
+    fpu_restore();
     break;
   case MOD_UNLOAD:
+    fpu_save();
     printf("ALLVM-JIT unloaded.\n");
 
     if (jit_handle)
       destroyJIT(jit_handle);
 
     cxx_fini();
+    fpu_restore();
+    fpu_deinit();
 
     break;
   default:
