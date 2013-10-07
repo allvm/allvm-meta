@@ -41,6 +41,11 @@ public:
   ~JITContext() {
     // EE->freeMachineCodeForFunction(...);
   }
+
+  Module &getModule() {
+    assert(M);
+    return *M;
+  }
 };
 
 void *createJIT(const void *bc_start, const void *bc_end, char lazy) {
@@ -102,7 +107,8 @@ void *createFunction(void *JIT, const char *name) {
 
 void destroyJIT(void *JIT) {
   assert(JIT);
-  delete static_cast<JITContext *>(JIT);
+  JITContext *JC = static_cast<JITContext *>(JIT);
+  delete JC;
 }
 
 static void __attribute__((constructor)) init() {
