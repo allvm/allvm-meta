@@ -116,8 +116,8 @@ user.o: user.c
 # requires a few things we rely on the kernel for
 #userapp: ${OBJS:Nmain.o} user.o
 #	${LD} ${LDFLAGS} -o ${.TARGET} ${.ALLSRC} ${LINK_TAIL}
-userapp: allvm.o user.o kernel.bc.o
-	${CXX} -static ${.ALLSRC} -o ${.TARGET} ${LLVM_LDFLAGS} -lm -O2
+userapp: allvm.o user.o kernel.bc.o guard.o
+	${CC} -static ${.ALLSRC} -o ${.TARGET} ${LLVM_LDFLAGS} ${LIBCXX} -lm -O2 -lc
 
 usertest: userapp
 	${.OBJDIR}/usertest kernel.bc
