@@ -4,6 +4,10 @@ cpu		HAMMER
 ident		ALLVM
 
 # makeoptions DEBUG=-g
+# options INVARIANT_SUPPORT
+# options INVARIANTS
+# options DIAGNOSTIC
+# options DEBUG_MEMGUARD
 
 options 	SCHED_ULE		# ULE scheduler
 options 	PREEMPTION		# Enable kernel thread preemption
