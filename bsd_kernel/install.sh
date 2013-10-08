@@ -20,6 +20,7 @@ sudo ln -sf $PWD/sys/conf/* /usr/src/sys/conf/
 # Misc other kernel build files:
 sudo ln -sf $PWD/sys/linux/modules/* /usr/src/
 
-# Helper script to nuke the build tree entirely
+# Helper scripts for building kernel/etc
+sudo ln -sf $PWD/misc/build.sh /usr/src/
 sudo ln -sf $PWD/misc/clean.sh /usr/src/
 
