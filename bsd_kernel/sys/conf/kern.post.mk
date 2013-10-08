@@ -136,30 +136,38 @@ ${FULLKERNEL}.bc: ${SYSTEM_DEP} vers.o
 	@echo "***// bitcode kernel built: ${.TARGET}"
 
 # Codegen into .o (later, we'd like to do this dynamically)
-${FULLKERNEL}.o: ${FULLKERNEL}.bc
+${FULLKERNEL}.llvm.o: ${FULLKERNEL}.bc
 	@rm -f ${.TARGET}
 	@echo "***\\\\ codegen'ing IR into ${.TARGET}"
 	${CC} ${CFLAGS} ${FULLKERNEL}.bc -o ${.TARGET} -c -fno-lto
 	@echo "***// kernel codegen'd!"
 
 # Inject kernel.bc into an object file for linking into kernel
-${FULLKERNEL}.bc.o: ${FULLKERNEL}.bc
+${FULLKERNEL}.embedbc.o: ${FULLKERNEL}.bc
 	@rm -f ${.TARGET} ${.TARGET}.lnk
 	@echo "***\\\\ Injecting ${FULLKERNEL}.bc into ${.TARGET}"
 	@echo "SECTIONS { .bckernel : { *(.data) }}" > ${.TARGET}.lnk
 	ld -r -o ${.TARGET} -b binary ${FULLKERNEL}.bc -b elf64-x86-64 -T ${.TARGET}.lnk
 	@echo "***// Created ${.TARGET} with kernel bitcode"
 
+# Combine all native object files into single one
+# Not necessary technically, but makes organiziation clearer.
+${FULLKERNEL}.native.o: ${SYSTEM_DEP} vers.o
+	@echo "Linking native portions of kernel together"
+	file ${SYSTEM_OBJS:M*.o} vers.o|grep -v LLVM|sed 's/:.*$$//g'| \
+	xargs ld -r -Bdynamic \
+	--no-warn-mismatch --warn-common \
+	-export-dynamic -dynamic-linker /red/herring \
+	-X -o ${.TARGET}
+
 # Link all native code together as we normally would:
-${FULLKERNEL}: ${FULLKERNEL}.o ${FULLKERNEL}.bc.o ${SYSTEM_DEPS}
+${FULLKERNEL}: ${FULLKERNEL}.llvm.o ${FULLKERNEL}.embedbc.o ${FULLKERNEL}.native.o
 	@rm -f ${.TARGET}
 	@echo linking ${.TARGET}
-	file ${SYSTEM_OBJS} vers.o|grep -v LLVM|sed 's/:.*$$//g'| \
-	xargs ld -Bdynamic -T ${LDSCRIPT} \
+	ld -Bdynamic -T ${LDSCRIPT} \
 		--no-warn-mismatch --warn-common \
 		-export-dynamic -dynamic-linker /red/herring \
-		-X -o ${.TARGET} \
-		${FULLKERNEL}.o ${FULLKERNEL}.bc.o
+		-X -o ${.TARGET} ${.ALLSRC} ${SYSTEM_OBJS:N*.o}
 .if ${MK_CTF} != "no"
 	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${SYSTEM_OBJS} vers.o
 .endif
