@@ -108,7 +108,7 @@ ${FULLPROG}: fin.o
 #       or from final /boot/kernel/kernel.
 # For now hijack build artifact
 
-kernel.bc.o: /usr/obj/usr/src/sys/ALLVM/kernel.bc.o
+kernel.embedbc.o: /usr/obj/usr/src/sys/ALLVM/kernel.embedbc.o
 	ln -sf ${.ALLSRC} ${.TARGET}
 
 user.o: user.c
@@ -118,10 +118,10 @@ user.o: user.c
 # requires a few things we rely on the kernel for
 #userapp: ${OBJS:Nmain.o} user.o
 #	${LD} ${LDFLAGS} -o ${.TARGET} ${.ALLSRC} ${LINK_TAIL}
-userapp: allvm.o user.o kernel.bc.o guard.o
+userapp: allvm.o user.o kernel.embedbc.o guard.o
 	${CC} -static ${.ALLSRC} -o ${.TARGET} ${LLVM_LDFLAGS} ${LIBCXX} -lm -O2 -lc
 
 usertest: userapp
 	${.OBJDIR}/usertest kernel.bc
 
-CLEANFILES += userapp user.o kernel.bc kernel.bc.o
+CLEANFILES += userapp user.o kernel.bc kernel.embedbc.o
