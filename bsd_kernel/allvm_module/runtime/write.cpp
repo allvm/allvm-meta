@@ -86,3 +86,10 @@ ssize_t write(int fd, const void *buf, size_t count) {
   return count;
 }
 
+int puts(const char *s);
+int puts(const char *s) {
+  int ret = write(1, s, strlen(s));
+  if (ret == -1)
+    return EOF;
+  return ret;
+}
