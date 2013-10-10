@@ -24,6 +24,7 @@ LINK_TAIL += -wrap malloc -wrap realloc -wrap free
 LINK_TAIL += -wrap getenv -wrap memcpy
 LINK_TAIL += -wrap printf -wrap vprintf
 LINK_TAIL += -wrap bcopy -wrap bzero
+LINK_TAIL += -O2 -z combreloc
 
 SRCS := main.c
 SRCS += allvm.cpp
