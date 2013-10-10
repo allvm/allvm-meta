@@ -20,6 +20,7 @@
 #include <sys/proc.h> // curthread
 
 #include <machine/fpu.h>
+#include <machine/specialreg.h>
 
 #include "icxxabi.h"
 #include "begin.h"
@@ -35,15 +36,22 @@ static void cxx_fini(void) {
     call_dtors();
 }
 
+#define start_emulating() load_cr0(rcr0() | CR0_TS)
+#define stop_emulating()  clts()
+
 static struct fpu_kern_ctx *fpu_ctx_save = 0;
 static void fpu_init(void) {
   fpu_ctx_save = fpu_kern_alloc_ctx(FPU_KERN_NORMAL);
 }
-static void fpu_save(void) {
-  fpu_kern_enter(curthread, fpu_ctx_save, FPU_KERN_NORMAL);
+static int fpu_save(void) {
+  int ret = !is_fpu_kern_thread(0) &&
+    !fpu_kern_enter(curthread, fpu_ctx_save, FPU_KERN_NORMAL);
+  stop_emulating();
+  return ret;
 }
 static void fpu_restore(void) {
   fpu_kern_leave(curthread, fpu_ctx_save);
+  start_emulating();
 }
 static void fpu_deinit(void) {
   fpu_kern_free_ctx(fpu_ctx_save);
@@ -61,7 +69,10 @@ static int jit_loader(struct module *m, int what, void *arg) {
   switch (what) {
   case MOD_LOAD: /* kldload */
     fpu_init();
-    fpu_save();
+    if (!fpu_save()) {
+      printf("Failed to save fpu context, aborting..\n");
+      return 0;
+    }
 
     printf("Initializing ALLVM-JIT KLD...\n");
 
@@ -78,7 +89,10 @@ static int jit_loader(struct module *m, int what, void *arg) {
     fpu_restore();
     break;
   case MOD_UNLOAD:
-    fpu_save();
+    if (!fpu_save()) {
+      printf("Failed to save fpu context, aborting..\n");
+      return 0;
+    }
     printf("ALLVM-JIT unloaded.\n");
 
     if (jit_handle)
