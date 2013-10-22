@@ -34,6 +34,7 @@ SRCS += mem.c memcpy.c bsd.c
 SRCS += abs.c atoi.c dl.c libc.c gcc.c printf.c signal.c strchr.c
 SRCS += write.cpp
 SRCS += debug.cpp
+SRCS += popcountdi2.c
 
 # Pull in libkern definitions for common functions
 LIBKERN_SRC += strcat.c strcmp.c strcpy.c strcspn.c strdup.c strlcat.c strlcpy.c strlen.c

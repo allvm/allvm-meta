@@ -24,7 +24,3 @@ void __register_frame(void *unused) {
 void __deregister_frame(void *unused) {
   TRACE();
 }
-
-UNSUPPORTED(__popcountdi2);
-UNSUPPORTED(__powidf2);
-UNSUPPORTED(__powisf2);
