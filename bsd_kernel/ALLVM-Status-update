@@ -1,0 +1,87 @@
+MIME-Version: 1.0
+Received: by 10.64.168.103 with HTTP; Tue, 8 Oct 2013 18:13:27 -0700 (PDT)
+X-Originating-IP: [99.4.167.123]
+Date: Tue, 8 Oct 2013 20:13:27 -0500
+Delivered-To: w@wdtz.org
+Message-ID: <CAKGWAO-Cqcq6DCWsfJDmYNGiJc+e794_ZWWehUpbcMazsMdVBQ@mail.gmail.com>
+Subject: [ALLVM] Status update
+From: Will Dietz <w@wdtz.org>
+To: "Vikram S. Adve" <vadve@illinois.edu>, Joshua Cranmer <cranmer2@illinois.edu>
+Content-Type: text/plain; charset=ISO-8859-1
+
+Hi all,
+
+After much hard work, I've finally got an "ALLVM-JIT" kernel module
+loaded into the kernel *early*.  Beyond the original numerous
+challenges of loading an LLVM-based JIT into a running kernel, this
+had quite a few more fun aspects such as dealing with limited memory
+available in state BIOS boots the kernel, using the FPU before it's
+properly initialized by the kernel, and others :).
+
+Here's the 'dmesg' from a kernel booted with ALLVM-JIT loaded very very early:
+
+https://pastee.org/xrsrz
+
+:D
+
+The allvm-jit module is actually loaded into memory *before* the
+kernel executes, but not fully initialized until after the kernel does
+a few very basic things: console support, memory subsystem, interrupt
+handler registration, etc.  These could be moved later but are
+convenient enough that I'm leaving them as part of the kernel base.
+
+Using this early-loaded JIT I'm able to successfully construct the
+Module used in HowToUseJIT [1] and *run* the resulting code.  This
+means the kernel now has the fundamental LLVM JIT capability rather
+early and it works! :D
+
+This is not what's shown in the log above, see below for more on that
+(few things to explain first).
+
+FWIW, in past month or so I also did the following relevant tasks:
+
+** Got the FreeBSD kernel building as much LTO as possible.
+Rigged the build system to build explicit kernel.bc file containing
+the majority of the kernel, excluding only pieces that are known to be
+buggy when built with clang.  (For reference the kernel.bc as an
+object file is 11M vs the non-IR portion being only 20k as an object
+file!)
+** Inject the kernel.bc into an object file that's linked into the kernel
+This causes the running kernel to have a copy of the IR used to build
+it available dynamically.
+** Fix uClibc++ to be correct enough to run LLVM correctly and AFAICT reliably
+(This took a lot of work, especially going through multiple libraries
+to find one that was 'close' enough to working but was modular,
+tweakable, and *small* enough to be suitable for ALLVM, and then of
+course lots of fun finding algorithm/datastructure/iterator bugs)
+** Improve uClibc++ to be *much* more efficient in general without
+sacrificing its goal regarding slim footprint and low memory usage
+Biggest change here is hijacking an old libstdc++ red-black tree for
+std::map/std::set
+** Multiple LLVM bugfixes as well as tweaking code to prefer iteration
+vs recursion (kernel by default has limited stack available)
+** Engineer the infrastructure required to run a C++ environment
+self-contained as much as possible (including implementing relevent
+libc features in terms of self-contained structures as much as
+possible)
+
+The pastee log above is the kernel using allvm-jit very early which
+includes running complex C++ code (LLVM!) that initializes LLVM, reads
+the kernel IR from memory (since it's embedded in the now-running
+kernel) and gets a JIT ready to build code on demand.
+
+I don't actually *use* the JIT to build code run by the kernel, yet,
+but that's a likely next step! :D
+
+Other fun steps are registering the ".bc" file format as an executable
+format that the kernel JIT's on-demand, possibly building library
+dependencies into the result :).
+
+Let the fun begin! :)
+
+~Will
+
+PS I'm already having lots of fun, as you can probably tell.  Hope you
+don't mind. :D
+
+[1] https://llvm.org/svn/llvm-project/llvm/tags/RELEASE_33/final/examples/HowToUseJIT/HowToUseJIT.cpp
